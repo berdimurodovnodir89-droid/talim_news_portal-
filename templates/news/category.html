@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ category.name }}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1 class="section-title">
+
+        {{ category.name }}
+
+    </h1>
+
+    <div class="news-grid">
+
+        {% for item in news %}
+
+        <a href="{% url 'detail' item.slug %}">
+
+            <div class="news-card">
+
+                <img src="{{ item.image.url }}" alt="">
+
+                <div class="news-body">
+
+                    <span>
+                        {{ item.category.name }}
+                    </span>
+
+                    <h3>
+                        {{ item.title }}
+                    </h3>
+
+                    <p>
+                        {{ item.short_description }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </a>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

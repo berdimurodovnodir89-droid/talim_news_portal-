@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ page_title }}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1 class="section-title">
+        {{ page_title }}
+    </h1>
+
+    <div class="news-grid">
+
+        {% for item in items %}
+
+        <div class="news-card">
+
+            <div class="news-body">
+
+                <span>
+                    KUN.UZ
+                </span>
+
+                <h3>
+                    {{ item.title }}
+                </h3>
+
+                <p>
+                    {{ item.summary|safe }}
+                </p>
+
+                <small>
+                    {{ item.published }}
+                </small>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

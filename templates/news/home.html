@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Ta'lim News
+{% endblock %}
+
+{% block content %}
+
+<div class="top-news">
+
+    <div class="container">
+
+        <div class="top-grid">
+
+            {% if latest_news %}
+
+            <div class="main-news">
+
+                <img
+                    src="https://picsum.photos/900/500"
+                    alt=""
+                >
+
+                <div class="main-content">
+
+                    <span class="category">
+                        KUN.UZ
+                    </span>
+
+                    <h1>
+                        {{ latest_news.0.title }}
+                    </h1>
+
+                    <p>
+                        {{ latest_news.0.summary|safe }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+            <div class="latest-news">
+
+                <h2>
+                    So‘nggi yangiliklar
+                </h2>
+
+                {% for item in latest_news %}
+
+                <div class="latest-item">
+
+                    <h4>
+                        {{ item.title }}
+                    </h4>
+
+                    <span>
+                        {{ item.published }}
+                    </span>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div class="news-section">
+
+    <div class="container">
+
+        <h2 class="section-title">
+            So‘nggi maqolalar
+        </h2>
+
+        <div class="news-grid">
+
+            {% for item in latest_news %}
+
+            <div class="news-card">
+
+                <img
+                    src="https://picsum.photos/400/250?random={{ forloop.counter }}"
+                    alt=""
+                >
+
+                <div class="news-body">
+
+                    <span>
+                        KUN.UZ
+                    </span>
+
+                    <h3>
+                        {{ item.title }}
+                    </h3>
+
+                    <p>
+                        {{ item.summary|safe|truncatewords:20 }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div class="news-section">
+
+    <div class="container">
+
+        <h2 class="section-title">
+            Eng ko‘p o‘qilganlar
+        </h2>
+
+        <div class="news-grid">
+
+            {% for item in latest_news %}
+
+            <div class="news-card">
+
+                <img
+                    src="https://picsum.photos/401/250?random={{ forloop.counter }}"
+                    alt=""
+                >
+
+                <div class="news-body">
+
+                    <span>
+                        TRENDING
+                    </span>
+
+                    <h3>
+                        {{ item.title }}
+                    </h3>
+
+                    <p>
+                        {{ item.summary|safe|truncatewords:15 }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,26 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Ta'lim News{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    {% include 'includes/navbar.html' %}
+
+    {% block content %}
+    {% endblock %}
+
+    {% include 'includes/footer.html' %}
+
+</body>
+
+</html>
