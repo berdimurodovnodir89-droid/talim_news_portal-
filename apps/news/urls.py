@@ -11,18 +11,6 @@ urlpatterns = [
     ),
 
     path(
-        'news/<slug:slug>/',
-        views.detail,
-        name='detail'
-    ),
-
-    path(
-        'category/<slug:slug>/',
-        views.category_news,
-        name='category_news'
-    ),
-
-    path(
         'sport/',
         views.sport_news,
         name='sport_news'
@@ -44,6 +32,12 @@ urlpatterns = [
         'jahon/',
         views.jahon_news,
         name='jahon_news'
+    ),
+
+    path(
+        'detail/',
+        views.news_detail,
+        name='news_detail'
     ),
 
 ]

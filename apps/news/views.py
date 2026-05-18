@@ -1,38 +1,8 @@
 import feedparser
-
 from django.shortcuts import render
 
 
-
-def home(request):
-
-    feed = feedparser.parse(
-        "https://kun.uz/news/rss"
-    )
-
-    latest_news = []
-
-    for item in feed.entries[:12]:
-
-        latest_news.append({
-            'title': item.title,
-            'summary': item.summary,
-            'published': item.published,
-        })
-
-    context = {
-        'latest_news': latest_news
-    }
-
-    return render(
-        request,
-        'news/home.html',
-        context
-    )
-
-
-
-def get_news_by_keyword(keyword):
+def get_news_by_keywords(keywords):
 
     feed = feedparser.parse(
         "https://kun.uz/news/rss"
@@ -46,108 +16,223 @@ def get_news_by_keyword(keyword):
 
         summary = ""
 
-        if hasattr(item, 'summary'):
+        if hasattr(item, "summary"):
             summary = item.summary.lower()
 
-        if keyword in title or keyword in summary:
+        for keyword in keywords:
 
-            items.append({
-                'title': item.title,
-                'summary': item.summary if hasattr(item, 'summary') else '',
-                'published': item.published,
-            })
+            if keyword in title or keyword in summary:
+
+                items.append({
+                    'title': item.title,
+                    'summary': item.summary,
+                    'published': item.published,
+                })
+
+                break
 
     return items
 
 
+# ASOSIY
+def home(request):
 
-def talim_news(request):
-
-    items = get_news_by_keyword("ta'lim")
-
-    context = {
-        'items': items,
-        'page_title': "Ta'lim Yangiliklari"
-    }
-
-    return render(
-        request,
-        'news/talim.html',
-        context
+    feed = feedparser.parse(
+        "https://kun.uz/news/rss"
     )
 
+    items = []
 
+    for item in feed.entries[:12]:
 
-def texno_news(request):
-
-    items = get_news_by_keyword("texnologiya")
-
-    context = {
-        'items': items,
-        'page_title': "Texnologiya Yangiliklari"
-    }
-
-    return render(
-        request,
-        'news/texno.html',
-        context
-    )
-
-
-
-def sport_news(request):
-
-    items = get_news_by_keyword("sport")
-
-    context = {
-        'items': items,
-        'page_title': "Sport Yangiliklari"
-    }
-
-    return render(
-        request,
-        'news/sport.html',
-        context
-    )
-
-
-
-def jahon_news(request):
-
-    items = get_news_by_keyword("jahon")
-
-    context = {
-        'items': items,
-        'page_title': "Jahon Yangiliklari"
-    }
-
-    return render(
-        request,
-        'news/jahon.html',
-        context
-    )
-
-def detail(request):
-
-    return render(
-        request,
-        'news/detail.html'
-    )
-def detail(request, slug):
-
-    return render(
-        request,
-        'news/detail.html'
-    )
-def category_news(request, slug):
-
-    items = get_news_by_keyword(slug)
+        items.append({
+            'title': item.title,
+            'summary': item.summary,
+            'published': item.published,
+        })
 
     return render(
         request,
         'news/category.html',
         {
             'items': items,
-            'page_title': slug.upper()
+            'page_title': "So‘nggi Yangiliklar",
+            'logo': "TA'LIM NEWS"
+        }
+    )
+
+
+# SPORT
+def sport_news(request):
+
+    feed = feedparser.parse(
+        "https://kun.uz/news/rss"
+    )
+
+    items = []
+
+    sport_keywords = [
+        "sport",
+        "futbol",
+        "messi",
+        "ronaldo",
+        "chempion",
+        "liga",
+        "gol",
+        "o‘yin",
+        "stadion",
+        "turnir",
+        "ufc",
+        "boks",
+        "osiyo",
+        "kubok",
+        "terma",
+    ]
+
+    for item in feed.entries:
+
+        title = item.title.lower()
+
+        summary = ""
+
+        if hasattr(item, "summary"):
+            summary = item.summary.lower()
+
+        if any(
+            word in title or word in summary
+            for word in sport_keywords
+        ):
+
+            items.append({
+                'title': item.title,
+                'summary': item.summary,
+                'published': item.published,
+            })
+
+    # AGAR SPORT TOPILMASA
+    if len(items) == 0:
+
+        for item in feed.entries[:12]:
+
+            items.append({
+                'title': item.title,
+                'summary': item.summary,
+                'published': item.published,
+            })
+
+    return render(
+        request,
+        'news/category.html',
+        {
+            'items': items,
+            'page_title': "Sport Yangiliklari",
+            'logo': "SPORT NEWS"
+        }
+    )
+
+# TA'LIM
+def talim_news(request):
+
+    keywords = [
+        "ta'lim",
+        "maktab",
+        "universitet",
+        "talaba",
+        "abituriyent",
+        "imtihon",
+        "o‘qituvchi",
+        "dars",
+    ]
+
+    items = get_news_by_keywords(
+        keywords
+    )
+
+    return render(
+        request,
+        'news/category.html',
+        {
+            'items': items,
+            'page_title': "Ta'lim Yangiliklari",
+            'logo': "TA'LIM NEWS"
+        }
+    )
+
+
+# TEXNOLOGIYA
+def texno_news(request):
+
+    keywords = [
+        "texnologiya",
+        "ai",
+        "sun’iy intellekt",
+        "google",
+        "iphone",
+        "samsung",
+        "robot",
+        "internet",
+        "it",
+        "python",
+        "dastur",
+    ]
+
+    items = get_news_by_keywords(
+        keywords
+    )
+
+    return render(
+        request,
+        'news/category.html',
+        {
+            'items': items,
+            'page_title': "Texnologiya Yangiliklari",
+            'logo': "TEXNO NEWS"
+        }
+    )
+
+
+# JAHON
+def jahon_news(request):
+
+    keywords = [
+        "rossiya",
+        "amerika",
+        "xitoy",
+        "ukraina",
+        "yevropa",
+        "tramp",
+        "putin",
+        "jahon",
+        "urush",
+        "turkiya",
+    ]
+
+    items = get_news_by_keywords(
+        keywords
+    )
+
+    return render(
+        request,
+        'news/category.html',
+        {
+            'items': items,
+            'page_title': "Jahon Yangiliklari",
+            'logo': "JAHON NEWS"
+        }
+    )
+
+def news_detail(request):
+
+    title = request.GET.get('title')
+    summary = request.GET.get('summary')
+    published = request.GET.get('published')
+
+    return render(
+        request,
+        'news/detail.html',
+        {
+            'title': title,
+            'summary': summary,
+            'published': published,
         }
     )

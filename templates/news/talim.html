@@ -8,7 +8,7 @@
 
 <div class="container">
 
-    <h1 class="section-title">
+    <h1 class="page-title">
         {{ page_title }}
     </h1>
 
@@ -20,7 +20,7 @@
 
             <div class="news-body">
 
-                <span>
+                <span class="category">
                     KUN.UZ
                 </span>
 
@@ -29,7 +29,7 @@
                 </h3>
 
                 <p>
-                    {{ item.summary|safe }}
+                    {{ item.summary|safe|truncatewords:30 }}
                 </p>
 
                 <small>
@@ -39,6 +39,12 @@
             </div>
 
         </div>
+
+        {% empty %}
+
+        <h2>
+            Yangilik topilmadi
+        </h2>
 
         {% endfor %}
 

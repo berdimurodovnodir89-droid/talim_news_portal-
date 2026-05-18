@@ -1,48 +1,53 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{{ category.name }}
+{{ page_title }}
 {% endblock %}
 
 {% block content %}
 
 <div class="container">
 
-    <h1 class="section-title">
-
-        {{ category.name }}
-
+    <h1 class="page-title">
+        {{ page_title }}
     </h1>
 
     <div class="news-grid">
 
-        {% for item in news %}
+        {% for item in items %}
 
-        <a href="{% url 'detail' item.slug %}">
+        <div class="news-card">
 
-            <div class="news-card">
+            <div class="news-body">
 
-                <img src="{{ item.image.url }}" alt="">
+                <span class="category">
+                    KUN.UZ
+                </span>
 
-                <div class="news-body">
+                <h2>
+                    {{ item.title }}
+                </h2>
 
-                    <span>
-                        {{ item.category.name }}
-                    </span>
+                <p>
+                    {{ item.summary|safe|truncatewords:25 }}
+                </p>
 
-                    <h3>
-                        {{ item.title }}
-                    </h3>
+                <small>
+                    {{ item.published }}
+                </small>
 
-                    <p>
-                        {{ item.short_description }}
-                    </p>
+                <br><br>
 
-                </div>
+                <a
+                    class="read-more"
+                    href="/detail/?title={{ item.title }}&summary={{ item.summary }}&published={{ item.published }}"
+                >
+                    Batafsil o‘qish
+                </a>
 
             </div>
 
-        </a>
+        </div>
 
         {% endfor %}
 

@@ -1,94 +1,28 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{{ news.title }}
+{{ title }}
 {% endblock %}
 
 {% block content %}
 
-<div class="container">
+<div class="detail-container">
 
-    <div class="detail-page">
+    <h1>
+        {{ title }}
+    </h1>
 
-        <img src="{{ news.image.url }}" alt="">
+    <p class="date">
+        {{ published }}
+    </p>
 
-        <div class="detail-content">
-
-            <span class="detail-category">
-                {{ news.category.name }}
-            </span>
-
-            <h1>
-                {{ news.title }}
-            </h1>
-
-            <div class="detail-info">
-
-                <span>
-                    Sana: {{ news.created_at|date:"d.m.Y H:i" }}
-                </span>
-
-                <span>
-                    Ko‘rishlar: {{ news.views }}
-                </span>
-
-            </div>
-
-            <div class="detail-text">
-
-                <p>
-                    {{ news.content }}
-                </p>
-
-            </div>
-
-        </div>
-
+    <div class="summary">
+        {{ summary|safe }}
     </div>
 
-
-
-    <div class="related">
-
-        <h2 class="section-title">
-            O‘xshash yangiliklar
-        </h2>
-
-        <div class="news-grid">
-
-            {% for item in related_news %}
-
-            <a href="{% url 'detail' item.slug %}">
-
-                <div class="news-card">
-
-                    <img src="{{ item.image.url }}" alt="">
-
-                    <div class="news-body">
-
-                        <span>
-                            {{ item.category.name }}
-                        </span>
-
-                        <h3>
-                            {{ item.title }}
-                        </h3>
-
-                        <p>
-                            {{ item.short_description }}
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </a>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
+    <a href="/" class="back-btn">
+        Orqaga qaytish
+    </a>
 
 </div>
 
