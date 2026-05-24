@@ -6,36 +6,47 @@
 
 {% block content %}
 
-<div class="detail-wrapper">
+<div class="detail-container">
 
-    <div class="detail-container">
+    <div class="detail-card">
 
-        <img
-            class="detail-image"
-            src="https://picsum.photos/1200/600?random=1"
-            alt="{{ title }}"
-        >
+        <div class="detail-image">
 
-        <div class="detail-info">
+            <img
+                src="{{ image }}"
+                alt="{{ title }}"
+            >
 
-            <span class="detail-date">
+        </div>
+
+        <div class="detail-content">
+
+            <div class="detail-date">
+
                 {{ published }}
-            </span>
+
+            </div>
 
             <h1>
+
                 {{ title }}
+
             </h1>
 
-            <p class="detail-description">
+            <div class="detail-description">
+
                 {{ description|safe }}
-            </p>
+
+            </div>
 
             <a
                 href="{{ link }}"
                 target="_blank"
-                class="back-btn"
+                class="source-btn"
             >
-                Kun.uz’da o‘qish
+
+                Asl manba
+
             </a>
 
         </div>
@@ -44,42 +55,48 @@
 
 </div>
 
-<div class="related-news">
+<div class="related-section">
 
     <h2>
-        O‘xshash yangiliklar
+        O‘xshash Yangiliklar
     </h2>
 
-    <div class="news-grid">
+    <div class="related-grid">
 
         {% for item in related_news %}
 
-        <div class="news-card">
+        <div class="related-card">
 
             <img
-                src="https://picsum.photos/500/300?random={{ forloop.counter }}"
+                src="{{ item.image }}"
                 alt="{{ item.title }}"
             >
 
-            <div class="news-content">
+            <div class="related-content">
 
-                <small class="news-source">
-                    KUN.UZ
-                </small>
+                <span>
+                    {{ item.published }}
+                </span>
 
                 <h3>
-                    {{ item.title|truncatewords:12 }}
+
+                    {{ item.title|truncatewords:10 }}
+
                 </h3>
 
                 <p>
-                    {{ item.summary|safe|truncatewords:18 }}
+
+                    {{ item.description|safe|truncatewords:18 }}
+
                 </p>
 
                 <a
-                    class="btn"
-                    href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.summary|urlencode }}&published={{ item.published|urlencode }}&link={{ item.link|urlencode }}"
+                    href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.description|urlencode }}&published={{ item.published|urlencode }}&image={{ item.image|urlencode }}&link={{ item.link|urlencode }}"
+                    class="read-more"
                 >
-                    Batafsil o‘qish
+
+                    Batafsil
+
                 </a>
 
             </div>
@@ -94,179 +111,109 @@
 
 <style>
 
-body{
-    margin: 0;
-    padding: 0;
-    background: #eef2f9;
-    font-family: Arial, sans-serif;
-}
-
-.detail-wrapper{
-    width: 92%;
-    margin: 50px auto;
-}
-
 .detail-container{
+    width: 92%;
+    margin: 40px auto;
+}
+
+.detail-card{
     background: white;
-    border-radius: 25px;
+    border-radius: 28px;
     overflow: hidden;
     box-shadow: 0 10px 35px rgba(0,0,0,0.08);
 }
 
-.detail-image{
+.detail-image img{
     width: 100%;
-    height: 600px;
+    height: 650px;
     object-fit: cover;
 }
 
-.detail-info{
-    padding: 50px;
+.detail-content{
+    padding: 45px;
 }
 
 .detail-date{
-    display: inline-block;
-    background: #edf2ff;
-    color: #001847;
-    padding: 8px 18px;
-    border-radius: 30px;
-    font-size: 15px;
-    font-weight: bold;
-    margin-bottom: 25px;
+    color: #4a73c9;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 20px;
 }
 
-.detail-info h1{
-    font-size: 56px;
+.detail-content h1{
+    font-size: 58px;
     line-height: 1.3;
-    color: #111;
+    color: #001847;
     margin-bottom: 30px;
     font-weight: 800;
 }
 
 .detail-description{
-    font-size: 24px;
-    line-height: 1.9;
-    color: #333;
+    font-size: 23px;
+    line-height: 2;
+    color: #444;
 }
 
-.back-btn{
+.source-btn{
     display: inline-block;
-    margin-top: 40px;
-    padding: 15px 32px;
+    margin-top: 35px;
+    padding: 15px 28px;
     background: linear-gradient(135deg,#001847,#00308a);
     color: white;
     text-decoration: none;
     border-radius: 12px;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: bold;
-    transition: 0.3s;
 }
 
-.back-btn:hover{
-    background: linear-gradient(135deg,#00308a,#005eff);
-}
-
-.related-news{
+.related-section{
     width: 92%;
-    margin: 80px auto;
+    margin: 70px auto;
 }
 
-.related-news h2{
-    font-size: 50px;
+.related-section h2{
+    font-size: 52px;
     color: #001847;
     margin-bottom: 40px;
     font-weight: 800;
 }
 
-.news-grid{
+.related-grid{
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(340px,1fr));
+    grid-template-columns: repeat(auto-fit,minmax(330px,1fr));
     gap: 35px;
 }
 
-.news-card{
+.related-card{
     background: white;
-    border-radius: 20px;
+    border-radius: 22px;
     overflow: hidden;
     box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    transition: 0.3s;
 }
 
-.news-card:hover{
-    transform: translateY(-8px);
-}
-
-.news-card img{
+.related-card img{
     width: 100%;
-    height: 240px;
+    height: 230px;
     object-fit: cover;
 }
 
-.news-content{
-    padding: 24px;
+.related-content{
+    padding: 22px;
 }
 
-.news-source{
-    display: inline-block;
-    background: #001847;
-    color: white;
-    padding: 6px 14px;
-    border-radius: 30px;
-    font-size: 13px;
-    font-weight: bold;
-    margin-bottom: 18px;
-}
-
-.news-content h3{
+.related-content h3{
     font-size: 28px;
-    line-height: 1.5;
-    margin-bottom: 18px;
-    color: #111;
+    color: #001847;
 }
 
-.news-content p{
-    font-size: 18px;
-    color: #555;
-    line-height: 1.8;
-}
-
-.btn{
+.read-more{
     display: inline-block;
     margin-top: 20px;
-    padding: 13px 28px;
-    background: linear-gradient(135deg,#001847,#00308a);
+    padding: 12px 24px;
+    background: #001847;
     color: white;
     text-decoration: none;
     border-radius: 10px;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-@media(max-width:768px){
-
-    .detail-image{
-        height: 300px;
-    }
-
-    .detail-info{
-        padding: 25px;
-    }
-
-    .detail-info h1{
-        font-size: 32px;
-    }
-
-    .detail-description{
-        font-size: 18px;
-    }
-
-    .related-news h2{
-        font-size: 34px;
-    }
-
-    .news-grid{
-        grid-template-columns: 1fr;
-    }
-
 }
 
 </style>

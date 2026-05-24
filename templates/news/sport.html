@@ -1,50 +1,33 @@
 {% extends 'base.html' %}
-
-{% block title %}
-{{ page_title }}
-{% endblock %}
+{% load static %}
 
 {% block content %}
 
-<div class="container">
+<div class="news-container">
 
-    <h1 class="page-title">
-        {{ page_title }}
-    </h1>
+    <h1 class="section-title">Sport Yangiliklari</h1>
 
     <div class="news-grid">
 
-        {% for item in items %}
+        {% for item in news %}
 
         <div class="news-card">
 
-            <div class="news-body">
+            <img src="{{ item.image }}" alt="news">
 
-                <span class="category">
-                    KUN.UZ
-                </span>
+            <div class="news-content">
 
-                <h3>
-                    {{ item.title }}
-                </h3>
+                <h2>{{ item.title }}</h2>
 
-                <p>
-                    {{ item.summary|safe|truncatewords:30 }}
-                </p>
+                <p>{{ item.published }}</p>
 
-                <small>
-                    {{ item.published }}
-                </small>
+                <a href="{{ item.link }}" target="_blank">
+                    Batafsil
+                </a>
 
             </div>
 
         </div>
-
-        {% empty %}
-
-        <h2>
-            Yangilik topilmadi
-        </h2>
 
         {% endfor %}
 

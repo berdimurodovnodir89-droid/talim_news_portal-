@@ -2,38 +2,78 @@ import feedparser
 from django.shortcuts import render
 
 
-def get_news(url):
+def get_news():
 
-    feed = feedparser.parse(url)
-
-    news = []
-
-    for item in feed.entries:
-
-        image = ""
-
-        try:
-            image = item.media_content[0]["url"]
-        except:
-            image = "https://picsum.photos/600/400"
-
-        news.append({
-            "title": item.get("title", "Sarlavha mavjud emas"),
-            "description": item.get("summary", "Ma'lumot mavjud emas"),
-            "published": item.get("published", ""),
-            "link": item.get("link", ""),
-            "image": image,
-        })
-
-    return news
-
-
-# ASOSIY
-def home(request):
-
-    latest_news = get_news(
+    feed = feedparser.parse(
         "https://kun.uz/news/rss"
     )
+
+    return feed.entries
+
+
+def filter_news(keyword_list):
+
+    all_news = get_news()
+
+    filtered = []
+
+    for item in all_news:
+
+        title = item.get(
+            "title",
+            ""
+        ).lower()
+
+        description = item.get(
+            "summary",
+            ""
+        ).lower()
+
+        text = title + " " + description
+
+        for keyword in keyword_list:
+
+            if keyword in text:
+
+                filtered.append({
+
+                    "title": item.get("title"),
+
+                    "description": item.get("summary"),
+
+                    "published": item.get("published"),
+
+                    "link": item.get("link"),
+
+                    "image": f"https://picsum.photos/600/400?random={len(filtered)+1}"
+
+                })
+
+                break
+
+    return filtered
+
+
+# HOME
+def home(request):
+
+    latest_news = []
+
+    for item in get_news():
+
+        latest_news.append({
+
+            "title": item.get("title"),
+
+            "description": item.get("summary"),
+
+            "published": item.get("published"),
+
+            "link": item.get("link"),
+
+            "image": f"https://picsum.photos/600/400?random={len(latest_news)+1}"
+
+        })
 
     return render(
         request,
@@ -44,29 +84,30 @@ def home(request):
     )
 
 
-# JAHON
-def jahon_news(request):
-
-    news = get_news(
-        "https://kun.uz/news/rss"
-    )
-
-    return render(
-        request,
-        "news/category.html",
-        {
-            "title": "Jahon Yangiliklari",
-            "news": news
-        }
-    )
-
-
-# SPORT
 def sport_news(request):
 
-    news = get_news(
-        "https://kun.uz/news/rss"
-    )
+    news = filter_news([
+        "sport",
+        "futbol",
+        "superliga",
+        "chempionlar",
+        "premyer",
+        "liga",
+        "ronaldo",
+        "messi",
+        "barselona",
+        "real",
+        "manchester",
+        "goal",
+        "gol",
+        "match",
+        "o‘yin",
+        "turnir",
+        "bokschi",
+        "ufc",
+        "tennis",
+        "nba"
+    ])
 
     return render(
         request,
@@ -78,12 +119,44 @@ def sport_news(request):
     )
 
 
+# JAHON
+def jahon_news(request):
+
+    news = filter_news([
+        "rossiya",
+        "ukraina",
+        "aqsh",
+        "yevropa",
+        "xitoy",
+        "jahon",
+        "putin",
+        "tramp"
+    ])
+
+    return render(
+        request,
+        "news/category.html",
+        {
+            "title": "Jahon Yangiliklari",
+            "news": news
+        }
+    )
+
+
 # TEXNOLOGIYA
 def texno_news(request):
 
-    news = get_news(
-        "https://kun.uz/news/rss"
-    )
+    news = filter_news([
+        "iphone",
+        "android",
+        "texnolog",
+        "ai",
+        "sun’iy",
+        "robot",
+        "internet",
+        "apple",
+        "google"
+    ])
 
     return render(
         request,
@@ -98,9 +171,15 @@ def texno_news(request):
 # TALIM
 def talim_news(request):
 
-    news = get_news(
-        "https://kun.uz/news/rss"
-    )
+    news = filter_news([
+        "ta’lim",
+        "maktab",
+        "universitet",
+        "imtihon",
+        "student",
+        "abituriyent",
+        "grant"
+    ])
 
     return render(
         request,
@@ -115,6 +194,26 @@ def talim_news(request):
 # DETAIL
 def news_detail(request):
 
+    related_news = []
+
+    all_news = get_news()
+
+    for item in all_news[:6]:
+
+        related_news.append({
+
+            "title": item.get("title"),
+
+            "description": item.get("summary"),
+
+            "published": item.get("published"),
+
+            "link": item.get("link"),
+
+            "image": f"https://picsum.photos/600/400?random={len(related_news)+1}"
+
+        })
+
     context = {
 
         "title": request.GET.get("title"),
@@ -127,9 +226,7 @@ def news_detail(request):
 
         "link": request.GET.get("link"),
 
-        "related_news": get_news(
-            "https://kun.uz/news/rss"
-        )[:6]
+        "related_news": related_news
 
     }
 
@@ -137,4 +234,12 @@ def news_detail(request):
         request,
         "news/detail.html",
         context
+    )
+
+# ABOUT
+def about(request):
+
+    return render(
+        request,
+        "news/about.html"
     )

@@ -1,43 +1,48 @@
 from django.urls import path
-from . import views
-
+from .views import *
 
 urlpatterns = [
 
     path(
         '',
-        views.home,
+        home,
         name='home'
     ),
 
     path(
-        'sport/',
-        views.sport_news,
-        name='sport_news'
+        'jahon/',
+        jahon_news,
+        name='jahon'
     ),
 
     path(
-        'talim/',
-        views.talim_news,
-        name='talim_news'
+        'sport/',
+        sport_news,
+        name='sport'
     ),
 
     path(
         'texnologiya/',
-        views.texno_news,
-        name='texno_news'
+        texno_news,
+        name='texnologiya'
     ),
 
     path(
-        'jahon/',
-        views.jahon_news,
-        name='jahon_news'
+        'talim/',
+        talim_news,
+        name='talim'
     ),
 
     path(
         'detail/',
-        views.news_detail,
+        news_detail,
         name='news_detail'
+    ),
+
+    path(
+        'about/',
+        about,
+        name='about'
     ),
 
 ]
