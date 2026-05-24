@@ -6,75 +6,68 @@ So‘nggi Yangiliklar
 
 {% block content %}
 
-<div class="home-container">
+<div class="hero-news">
 
-    <!-- CHAP TOMON -->
-    <div class="left-news">
+    {% if latest_news %}
 
-        {% if latest_news %}
+    <div class="hero-left">
 
-        <!-- KATTA YANGILIK -->
-        <div class="main-news">
+        <img
+            src="https://picsum.photos/1200/700?random=1"
+            alt="{{ latest_news.0.title }}"
+        >
+
+        <div class="hero-content">
+
+            <small>
+                KUN.UZ
+            </small>
 
             <h1>
                 {{ latest_news.0.title }}
             </h1>
 
             <p>
-                {{ latest_news.0.summary|safe|truncatewords:25 }}
+                {{ latest_news.0.summary|safe|truncatewords:35 }}
             </p>
 
-            <a href="{% url 'news_detail' 0 %}">
+            <a
+                class="btn"
+                href="{% url 'news_detail' %}?title={{ latest_news.0.title|urlencode }}&description={{ latest_news.0.summary|urlencode }}&published={{ latest_news.0.published|urlencode }}&link={{ latest_news.0.link|urlencode }}"
+            >
                 Batafsil o‘qish
             </a>
 
         </div>
 
-        <!-- QOLGAN YANGILIKLAR -->
-        <div class="small-news">
-
-            {% for item in latest_news|slice:"1:5" %}
-
-            <div class="news-card">
-
-                <h3>
-                    {{ item.title }}
-                </h3>
-
-                <p>
-                    {{ item.summary|safe|truncatewords:20 }}
-                </p>
-
-                <span>
-                    {{ item.published }}
-                </span>
-
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-        {% endif %}
-
     </div>
 
-    <!-- O‘NG TOMON -->
-    <div class="right-news">
+    <div class="hero-right">
 
-        <h2>So‘nggi yangiliklar</h2>
+        <h2>
+            So‘nggi yangiliklar
+        </h2>
 
-        {% for item in latest_news|slice:"5:15" %}
+        {% for item in latest_news|slice:"1:8" %}
 
-        <div class="right-item">
+        <div class="side-news">
 
-            <h4>
+            <h3>
                 {{ item.title }}
-            </h4>
+            </h3>
 
-            <p>
+            <span>
                 {{ item.published }}
-            </p>
+            </span>
+
+            <br><br>
+
+            <a
+                class="small-btn"
+                href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.summary|urlencode }}&published={{ item.published|urlencode }}&link={{ item.link|urlencode }}"
+            >
+                O‘qish
+            </a>
 
         </div>
 
@@ -82,6 +75,307 @@ So‘nggi Yangiliklar
 
     </div>
 
+    {% endif %}
+
 </div>
+
+<div class="section-title">
+    <h2>Barcha Yangiliklar</h2>
+</div>
+
+<div class="news-grid">
+
+    {% for item in latest_news %}
+
+    <div class="news-card">
+
+        <img
+            src="https://picsum.photos/600/400?random={{ forloop.counter }}"
+            alt="{{ item.title }}"
+        >
+
+        <div class="news-content">
+
+            <small class="news-source">
+                KUN.UZ
+            </small>
+
+            <h2>
+                {{ item.title }}
+            </h2>
+
+            <p>
+                {{ item.summary|safe|truncatewords:20 }}
+            </p>
+
+            <span class="news-date">
+                {{ item.published }}
+            </span>
+
+            <br><br>
+
+            <a
+                class="btn"
+                href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.summary|urlencode }}&published={{ item.published|urlencode }}&link={{ item.link|urlencode }}"
+            >
+                Batafsil o‘qish
+            </a>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+<style>
+
+body{
+    margin: 0;
+    padding: 0;
+    background: #eef2f9;
+    font-family: Arial, sans-serif;
+}
+
+.hero-news{
+    width: 92%;
+    margin: 40px auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+.hero-left{
+    position: relative;
+    overflow: hidden;
+    border-radius: 25px;
+    height: 650px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+}
+
+.hero-left img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-content{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 50px;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    box-sizing: border-box;
+}
+
+.hero-content small{
+    display: inline-block;
+    background: #001847;
+    color: white;
+    padding: 7px 16px;
+    border-radius: 30px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.hero-content h1{
+    font-size: 58px;
+    line-height: 1.2;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.hero-content p{
+    font-size: 22px;
+    color: #eee;
+    line-height: 1.8;
+    margin-bottom: 30px;
+}
+
+.hero-right{
+    background: white;
+    border-radius: 25px;
+    padding: 30px;
+    overflow-y: auto;
+    max-height: 650px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.hero-right h2{
+    font-size: 40px;
+    color: #001847;
+    margin-bottom: 30px;
+}
+
+.side-news{
+    border-bottom: 1px solid #ddd;
+    padding: 20px 0;
+}
+
+.side-news:last-child{
+    border-bottom: none;
+}
+
+.side-news h3{
+    font-size: 24px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    color: #111;
+}
+
+.side-news span{
+    color: gray;
+    font-size: 15px;
+}
+
+.section-title{
+    width: 92%;
+    margin: 50px auto 30px auto;
+}
+
+.section-title h2{
+    font-size: 55px;
+    color: #001847;
+}
+
+.news-grid{
+    width: 92%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(340px,1fr));
+    gap: 35px;
+    margin-bottom: 80px;
+}
+
+.news-card{
+    background: white;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.news-card:hover{
+    transform: translateY(-8px);
+}
+
+.news-card img{
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.news-content{
+    padding: 25px;
+}
+
+.news-source{
+    display: inline-block;
+    background: #001847;
+    color: white;
+    padding: 7px 15px;
+    border-radius: 30px;
+    font-size: 13px;
+    margin-bottom: 18px;
+    font-weight: bold;
+}
+
+.news-content h2{
+    font-size: 30px;
+    line-height: 1.4;
+    margin-bottom: 18px;
+}
+
+.news-content p{
+    font-size: 18px;
+    color: #555;
+    line-height: 1.8;
+}
+
+.news-date{
+    display: block;
+    margin-top: 20px;
+    color: gray;
+    font-size: 15px;
+}
+
+.btn{
+    display: inline-block;
+    padding: 14px 28px;
+    background: linear-gradient(135deg,#001847,#00308a);
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.small-btn{
+    display: inline-block;
+    padding: 10px 20px;
+    background: #001847;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+@media(max-width:992px){
+
+    .hero-news{
+        grid-template-columns: 1fr;
+    }
+
+    .hero-left{
+        height: 500px;
+    }
+
+    .hero-content h1{
+        font-size: 40px;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .hero-left{
+        height: 400px;
+    }
+
+    .hero-content{
+        padding: 25px;
+    }
+
+    .hero-content h1{
+        font-size: 28px;
+    }
+
+    .hero-content p{
+        font-size: 16px;
+    }
+
+    .hero-right h2{
+        font-size: 28px;
+    }
+
+    .section-title h2{
+        font-size: 36px;
+    }
+
+    .news-grid{
+        grid-template-columns: 1fr;
+    }
+
+    .news-content h2{
+        font-size: 24px;
+    }
+
+}
+
+</style>
 
 {% endblock %}

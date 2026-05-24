@@ -1,58 +1,219 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{{ page_title }}
+{{ title }}
 {% endblock %}
 
 {% block content %}
 
-<div class="container">
+<div class="page-title">
+    <h1>{{ title }}</h1>
+</div>
 
-    <h1 class="page-title">
-        {{ page_title }}
-    </h1>
+<div class="news-grid">
 
-    <div class="news-grid">
+    {% for item in news %}
 
-        {% for item in items %}
+    <div class="news-card">
 
-        <div class="news-card">
+        <div class="news-image">
 
-            <div class="news-body">
-
-                <span class="category">
-                    KUN.UZ
-                </span>
-
-                <h2>
-                    {{ item.title }}
-                </h2>
-
-                <p>
-                    {{ item.summary|safe|truncatewords:25 }}
-                </p>
-
-                <small>
-                    {{ item.published }}
-                </small>
-
-                <br><br>
-
-                <a
-                    class="read-more"
-                    href="/detail/?title={{ item.title }}&summary={{ item.summary }}&published={{ item.published }}"
-                >
-                    Batafsil o‘qish
-                </a>
-
-            </div>
+            <img
+                src="https://picsum.photos/600/400?random={{ forloop.counter }}"
+                alt="{{ item.title }}"
+            >
 
         </div>
 
-        {% endfor %}
+        <div class="news-content">
+
+            <small class="news-source">
+                KUN.UZ
+            </small>
+
+            <h2>
+                {{ item.title }}
+            </h2>
+
+            <p>
+                {{ item.summary|safe|truncatewords:25 }}
+            </p>
+
+            <span class="news-date">
+                {{ item.published }}
+            </span>
+
+            <a
+                class="btn"
+                href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.summary|urlencode }}&published={{ item.published|urlencode }}&link={{ item.link|urlencode }}"
+            >
+                Batafsil o‘qish
+            </a>
+
+        </div>
 
     </div>
 
+    {% empty %}
+
+    <div class="empty-news">
+        <h2>Yangilik topilmadi</h2>
+    </div>
+
+    {% endfor %}
+
 </div>
+
+<style>
+
+body{
+    margin: 0;
+    padding: 0;
+    background: #eef2f9;
+    font-family: Arial, sans-serif;
+}
+
+.page-title{
+    width: 92%;
+    margin: 45px auto;
+}
+
+.page-title h1{
+    font-size: 60px;
+    font-weight: 800;
+    color: #001847;
+}
+
+.news-grid{
+    width: 92%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(350px,1fr));
+    gap: 35px;
+    margin-bottom: 80px;
+}
+
+.news-card{
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.news-card:hover{
+    transform: translateY(-8px);
+    box-shadow: 0 18px 45px rgba(0,0,0,0.12);
+}
+
+.news-image{
+    width: 100%;
+    height: 260px;
+    overflow: hidden;
+}
+
+.news-image img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.4s;
+}
+
+.news-card:hover img{
+    transform: scale(1.05);
+}
+
+.news-content{
+    padding: 26px;
+}
+
+.news-source{
+    display: inline-block;
+    background: #001847;
+    color: white;
+    padding: 7px 16px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 18px;
+}
+
+.news-content h2{
+    font-size: 30px;
+    line-height: 1.4;
+    color: #111;
+    margin-bottom: 18px;
+    font-weight: 700;
+}
+
+.news-content p{
+    font-size: 18px;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.news-date{
+    display: block;
+    color: gray;
+    font-size: 15px;
+    margin-bottom: 22px;
+}
+
+.btn{
+    display: inline-block;
+    padding: 14px 28px;
+    background: linear-gradient(135deg,#001847,#00308a);
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn:hover{
+    background: linear-gradient(135deg,#00308a,#005eff);
+    transform: scale(1.03);
+}
+
+.empty-news{
+    width: 100%;
+    background: white;
+    padding: 50px;
+    text-align: center;
+    border-radius: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #001847;
+}
+
+@media(max-width:768px){
+
+    .page-title h1{
+        font-size: 38px;
+    }
+
+    .news-grid{
+        grid-template-columns: 1fr;
+    }
+
+    .news-content h2{
+        font-size: 24px;
+    }
+
+    .news-content p{
+        font-size: 16px;
+    }
+
+    .btn{
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+}
+
+</style>
 
 {% endblock %}

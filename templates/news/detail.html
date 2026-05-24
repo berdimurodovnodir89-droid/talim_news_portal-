@@ -6,24 +6,269 @@
 
 {% block content %}
 
-<div class="detail-container">
+<div class="detail-wrapper">
 
-    <h1>
-        {{ title }}
-    </h1>
+    <div class="detail-container">
 
-    <p class="date">
-        {{ published }}
-    </p>
+        <img
+            class="detail-image"
+            src="https://picsum.photos/1200/600?random=1"
+            alt="{{ title }}"
+        >
 
-    <div class="summary">
-        {{ summary|safe }}
+        <div class="detail-info">
+
+            <span class="detail-date">
+                {{ published }}
+            </span>
+
+            <h1>
+                {{ title }}
+            </h1>
+
+            <p class="detail-description">
+                {{ description|safe }}
+            </p>
+
+            <a
+                href="{{ link }}"
+                target="_blank"
+                class="back-btn"
+            >
+                Kun.uz’da o‘qish
+            </a>
+
+        </div>
+
     </div>
 
-    <a href="/" class="back-btn">
-        Orqaga qaytish
-    </a>
+</div>
+
+<div class="related-news">
+
+    <h2>
+        O‘xshash yangiliklar
+    </h2>
+
+    <div class="news-grid">
+
+        {% for item in related_news %}
+
+        <div class="news-card">
+
+            <img
+                src="https://picsum.photos/500/300?random={{ forloop.counter }}"
+                alt="{{ item.title }}"
+            >
+
+            <div class="news-content">
+
+                <small class="news-source">
+                    KUN.UZ
+                </small>
+
+                <h3>
+                    {{ item.title|truncatewords:12 }}
+                </h3>
+
+                <p>
+                    {{ item.summary|safe|truncatewords:18 }}
+                </p>
+
+                <a
+                    class="btn"
+                    href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.summary|urlencode }}&published={{ item.published|urlencode }}&link={{ item.link|urlencode }}"
+                >
+                    Batafsil o‘qish
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
 
 </div>
+
+<style>
+
+body{
+    margin: 0;
+    padding: 0;
+    background: #eef2f9;
+    font-family: Arial, sans-serif;
+}
+
+.detail-wrapper{
+    width: 92%;
+    margin: 50px auto;
+}
+
+.detail-container{
+    background: white;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+}
+
+.detail-image{
+    width: 100%;
+    height: 600px;
+    object-fit: cover;
+}
+
+.detail-info{
+    padding: 50px;
+}
+
+.detail-date{
+    display: inline-block;
+    background: #edf2ff;
+    color: #001847;
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.detail-info h1{
+    font-size: 56px;
+    line-height: 1.3;
+    color: #111;
+    margin-bottom: 30px;
+    font-weight: 800;
+}
+
+.detail-description{
+    font-size: 24px;
+    line-height: 1.9;
+    color: #333;
+}
+
+.back-btn{
+    display: inline-block;
+    margin-top: 40px;
+    padding: 15px 32px;
+    background: linear-gradient(135deg,#001847,#00308a);
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.back-btn:hover{
+    background: linear-gradient(135deg,#00308a,#005eff);
+}
+
+.related-news{
+    width: 92%;
+    margin: 80px auto;
+}
+
+.related-news h2{
+    font-size: 50px;
+    color: #001847;
+    margin-bottom: 40px;
+    font-weight: 800;
+}
+
+.news-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(340px,1fr));
+    gap: 35px;
+}
+
+.news-card{
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.news-card:hover{
+    transform: translateY(-8px);
+}
+
+.news-card img{
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+}
+
+.news-content{
+    padding: 24px;
+}
+
+.news-source{
+    display: inline-block;
+    background: #001847;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 18px;
+}
+
+.news-content h3{
+    font-size: 28px;
+    line-height: 1.5;
+    margin-bottom: 18px;
+    color: #111;
+}
+
+.news-content p{
+    font-size: 18px;
+    color: #555;
+    line-height: 1.8;
+}
+
+.btn{
+    display: inline-block;
+    margin-top: 20px;
+    padding: 13px 28px;
+    background: linear-gradient(135deg,#001847,#00308a);
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+@media(max-width:768px){
+
+    .detail-image{
+        height: 300px;
+    }
+
+    .detail-info{
+        padding: 25px;
+    }
+
+    .detail-info h1{
+        font-size: 32px;
+    }
+
+    .detail-description{
+        font-size: 18px;
+    }
+
+    .related-news h2{
+        font-size: 34px;
+    }
+
+    .news-grid{
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
 
 {% endblock %}
