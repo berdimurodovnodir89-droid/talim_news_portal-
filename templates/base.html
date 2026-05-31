@@ -9,11 +9,9 @@
           content="width=device-width, initial-scale=1.0">
 
     <title>
-
         {% block title %}
-        ABDULLA NEWS
+        Ta'lim News Portal
         {% endblock %}
-
     </title>
 
     <link rel="stylesheet"
@@ -25,203 +23,198 @@
 
 <nav class="navbar">
 
-    <div class="logo">
+    <a href="/" class="logo">
 
         <i class="fa-solid fa-newspaper"></i>
 
         <span>
-            ABDULLA NEWS
+            TA'LIM NEWS
         </span>
 
-    </div>
+    </a>
 
     <ul class="nav-links">
 
         <li>
-
             <a href="/">
-
                 <i class="fa-solid fa-house"></i>
-
                 Asosiy
-
             </a>
-
         </li>
 
         <li>
-
             <a href="/talim/">
-
                 <i class="fa-solid fa-graduation-cap"></i>
-
                 Ta'lim
-
             </a>
-
         </li>
 
         <li>
-
             <a href="/texnologiya/">
-
                 <i class="fa-solid fa-microchip"></i>
-
                 Texnologiya
-
             </a>
-
         </li>
 
         <li>
-
             <a href="/sport/">
-
-                <i class="fa-solid fa-football"></i>
-
+                <i class="fa-solid fa-futbol"></i>
                 Sport
-
             </a>
-
         </li>
 
         <li>
-
             <a href="/jahon/">
-
                 <i class="fa-solid fa-earth-americas"></i>
-
                 Jahon
-
             </a>
-
         </li>
 
         <li>
-
             <a href="/about/">
-
                 <i class="fa-solid fa-circle-info"></i>
-
                 Dastur haqida
-
             </a>
-
         </li>
 
     </ul>
 
 </nav>
 
+<main>
 
 {% block content %}
-
 {% endblock %}
 
+</main>
 
 <style>
 
 *{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
 body{
-    font-family: Arial, sans-serif;
-    background: #f4f7fb;
+    background:#eef3ff;
+    font-family:Arial,sans-serif;
 }
 
+/* NAVBAR */
+
 .navbar{
-    width: 100%;
-    background: linear-gradient(135deg,#001847,#002b75);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 22px 70px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    width:100%;
+    background:linear-gradient(135deg,#001847,#002f87);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 60px;
+    position:sticky;
+    top:0;
+    z-index:1000;
+    box-shadow:0 5px 20px rgba(0,0,0,.15);
 }
 
 .logo{
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: white;
-    font-size: 34px;
-    font-weight: 800;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    text-decoration:none;
+    color:white;
 }
 
 .logo i{
-    color: #4da3ff;
+    color:#4da3ff;
+    font-size:40px;
 }
+
+.logo span{
+    font-size:42px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+/* MENU */
 
 .nav-links{
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    list-style: none;
+    display:flex;
+    list-style:none;
+    gap:15px;
 }
 
-.nav-links li a{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 22px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 14px;
-    text-decoration: none;
-    color: white;
-    font-size: 18px;
-    font-weight: 600;
-    transition: 0.3s;
+.nav-links a{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:14px 22px;
+    background:rgba(255,255,255,.08);
+    border-radius:14px;
+    color:white;
+    text-decoration:none;
+    font-size:18px;
+    font-weight:600;
+    transition:.3s;
 }
 
-.nav-links li a:hover{
-    background: white;
-    color: #001847;
-    transform: translateY(-3px);
+.nav-links a:hover{
+    background:white;
+    color:#001847;
+    transform:translateY(-3px);
 }
 
-.nav-links li a i{
-    font-size: 18px;
+.nav-links i{
+    font-size:18px;
 }
 
-@media(max-width:1100px){
+/* CONTENT */
+
+main{
+    min-height:80vh;
+}
+
+/* MOBILE */
+
+@media(max-width:1200px){
 
     .navbar{
-        flex-direction: column;
-        gap: 25px;
-        padding: 25px;
+        flex-direction:column;
+        gap:25px;
     }
 
     .nav-links{
-        flex-wrap: wrap;
-        justify-content: center;
+        flex-wrap:wrap;
+        justify-content:center;
     }
 
 }
 
 @media(max-width:768px){
 
-    .logo{
-        font-size: 26px;
+    .navbar{
+        padding:20px;
+    }
+
+    .logo span{
+        font-size:28px;
+    }
+
+    .logo i{
+        font-size:30px;
     }
 
     .nav-links{
-        width: 100%;
-        flex-direction: column;
+        width:100%;
+        flex-direction:column;
     }
 
     .nav-links li{
-        width: 100%;
+        width:100%;
     }
 
-    .nav-links li a{
-        width: 100%;
-        justify-content: center;
+    .nav-links a{
+        width:100%;
+        justify-content:center;
     }
 
 }
