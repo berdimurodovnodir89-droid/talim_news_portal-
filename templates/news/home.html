@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-So‘nggi Yangiliklar
+So'nggi Yangiliklar
 {% endblock %}
 
 {% block content %}
@@ -31,11 +31,11 @@ So‘nggi Yangiliklar
                 {{ latest_news.0.summary|safe|truncatewords:35 }}
             </p>
 
-            <a
+            
                 class="btn"
                 href="{% url 'news_detail' %}?title={{ latest_news.0.title|urlencode }}&description={{ latest_news.0.summary|urlencode }}&published={{ latest_news.0.published|urlencode }}&link={{ latest_news.0.link|urlencode }}"
             >
-                Batafsil o‘qish
+                Batafsil o'qish
             </a>
 
         </div>
@@ -45,7 +45,7 @@ So‘nggi Yangiliklar
     <div class="hero-right">
 
         <h2>
-            So‘nggi yangiliklar
+            So'nggi yangiliklar
         </h2>
 
         {% for item in latest_news|slice:"1:8" %}
@@ -62,11 +62,11 @@ So‘nggi Yangiliklar
 
             <br><br>
 
-            <a
+            
                 class="small-btn"
                 href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.summary|urlencode }}&published={{ item.published|urlencode }}&link={{ item.link|urlencode }}"
             >
-                O‘qish
+                O'qish
             </a>
 
         </div>
@@ -114,11 +114,11 @@ So‘nggi Yangiliklar
 
             <br><br>
 
-            <a
+            
                 class="btn"
                 href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.summary|urlencode }}&published={{ item.published|urlencode }}&link={{ item.link|urlencode }}"
             >
-                Batafsil o‘qish
+                Batafsil o'qish
             </a>
 
         </div>
@@ -324,6 +324,7 @@ body{
     font-weight: bold;
 }
 
+/* TABLET */
 @media(max-width:992px){
 
     .hero-news{
@@ -338,40 +339,104 @@ body{
         font-size: 40px;
     }
 
+    .hero-right{
+        max-height: none;
+    }
+
 }
 
+/* MOBILE */
 @media(max-width:768px){
 
+    .hero-news{
+        width: 100%;
+        margin: 0;
+        padding: 15px;
+        box-sizing: border-box;
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
     .hero-left{
-        height: 400px;
+        height: 320px;
+        border-radius: 18px;
     }
 
     .hero-content{
-        padding: 25px;
+        padding: 20px;
     }
 
     .hero-content h1{
-        font-size: 28px;
+        font-size: 22px;
+        margin-bottom: 10px;
     }
 
     .hero-content p{
-        font-size: 16px;
+        font-size: 14px;
+        margin-bottom: 15px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .hero-right{
+        max-height: none;
+        padding: 20px;
+        border-radius: 18px;
     }
 
     .hero-right h2{
-        font-size: 28px;
+        font-size: 22px;
+        margin-bottom: 15px;
+    }
+
+    .side-news h3{
+        font-size: 17px;
+    }
+
+    .section-title{
+        width: 100%;
+        padding: 0 15px;
+        box-sizing: border-box;
+        margin: 30px auto 20px auto;
     }
 
     .section-title h2{
-        font-size: 36px;
+        font-size: 26px;
     }
 
     .news-grid{
+        width: 100%;
+        padding: 0 15px;
+        box-sizing: border-box;
         grid-template-columns: 1fr;
+        gap: 20px;
+        margin-bottom: 50px;
+    }
+
+    .news-card img{
+        height: 200px;
+    }
+
+    .news-content{
+        padding: 18px;
     }
 
     .news-content h2{
-        font-size: 24px;
+        font-size: 20px;
+    }
+
+    .news-content p{
+        font-size: 15px;
+    }
+
+    .btn{
+        padding: 12px 22px;
+        font-size: 15px;
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
     }
 
 }
