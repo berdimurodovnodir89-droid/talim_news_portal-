@@ -4,13 +4,11 @@
 <head>
 
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>
         {% block title %}
-        Ta'lim News Portal
+        KUN News Portal
         {% endblock %}
     </title>
 
@@ -24,202 +22,267 @@
 <nav class="navbar">
 
     <a href="/" class="logo">
-
         <i class="fa-solid fa-newspaper"></i>
-
-        <span>
-            TA'LIM NEWS
-        </span>
-
+        <span>KUN NEWS</span>
     </a>
 
-    <ul class="nav-links">
+    <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
 
+    <ul class="nav-links" id="navLinks">
         <li>
             <a href="/">
                 <i class="fa-solid fa-house"></i>
                 Asosiy
             </a>
         </li>
-
         <li>
             <a href="/talim/">
                 <i class="fa-solid fa-graduation-cap"></i>
                 Ta'lim
             </a>
         </li>
-
         <li>
             <a href="/texnologiya/">
                 <i class="fa-solid fa-microchip"></i>
                 Texnologiya
             </a>
         </li>
-
         <li>
             <a href="/sport/">
                 <i class="fa-solid fa-futbol"></i>
                 Sport
             </a>
         </li>
-
         <li>
             <a href="/jahon/">
                 <i class="fa-solid fa-earth-americas"></i>
                 Jahon
             </a>
         </li>
-
         <li>
             <a href="/about/">
                 <i class="fa-solid fa-circle-info"></i>
                 Dastur haqida
             </a>
         </li>
-
     </ul>
 
 </nav>
 
 <main>
-
 {% block content %}
 {% endblock %}
-
 </main>
 
 <style>
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-    background:#eef3ff;
-    font-family:Arial,sans-serif;
+body {
+    background: #eef3ff;
+    font-family: Arial, sans-serif;
 }
 
-/* NAVBAR */
+/* ===== NAVBAR ===== */
 
-.navbar{
-    width:100%;
-    background:linear-gradient(135deg,#001847,#002f87);
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:20px 60px;
-    position:sticky;
-    top:0;
-    z-index:1000;
-    box-shadow:0 5px 20px rgba(0,0,0,.15);
+.navbar {
+    width: 100%;
+    background: linear-gradient(135deg, #001847, #002f87);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 40px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 5px 20px rgba(0,0,0,.15);
 }
 
-.logo{
-    display:flex;
-    align-items:center;
-    gap:15px;
-    text-decoration:none;
-    color:white;
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: white;
 }
 
-.logo i{
-    color:#4da3ff;
-    font-size:40px;
+.logo i {
+    color: #4da3ff;
+    font-size: 32px;
 }
 
-.logo span{
-    font-size:42px;
-    font-weight:800;
-    letter-spacing:1px;
+.logo span {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 1px;
 }
 
-/* MENU */
+/* ===== NAV LINKS ===== */
 
-.nav-links{
-    display:flex;
-    list-style:none;
-    gap:15px;
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 10px;
+    align-items: center;
 }
 
-.nav-links a{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:14px 22px;
-    background:rgba(255,255,255,.08);
-    border-radius:14px;
-    color:white;
-    text-decoration:none;
-    font-size:18px;
-    font-weight:600;
-    transition:.3s;
+.nav-links a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: rgba(255,255,255,.1);
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    transition: .25s;
+    white-space: nowrap;
 }
 
-.nav-links a:hover{
-    background:white;
-    color:#001847;
-    transform:translateY(-3px);
+.nav-links a:hover {
+    background: white;
+    color: #001847;
+    transform: translateY(-2px);
 }
 
-.nav-links i{
-    font-size:18px;
+.nav-links i {
+    font-size: 16px;
 }
 
-/* CONTENT */
+/* ===== HAMBURGER TUGMA ===== */
 
-main{
-    min-height:80vh;
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 22px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
 }
 
-/* MOBILE */
+.hamburger span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: white;
+    border-radius: 3px;
+    transition: .3s;
+}
 
-@media(max-width:1200px){
+.hamburger.active span:nth-child(1) {
+    transform: translateY(9.5px) rotate(45deg);
+}
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+.hamburger.active span:nth-child(3) {
+    transform: translateY(-9.5px) rotate(-45deg);
+}
 
-    .navbar{
-        flex-direction:column;
-        gap:25px;
+/* ===== MAIN CONTENT ===== */
+
+main {
+    min-height: 80vh;
+}
+
+/* ===== TABLET (max 1100px) ===== */
+
+@media (max-width: 1100px) {
+    .navbar {
+        padding: 16px 24px;
     }
 
-    .nav-links{
-        flex-wrap:wrap;
-        justify-content:center;
+    .nav-links a {
+        padding: 9px 13px;
+        font-size: 14px;
     }
-
 }
 
-@media(max-width:768px){
+/* ===== MOBILE (max 768px) ===== */
 
-    .navbar{
-        padding:20px;
+@media (max-width: 768px) {
+
+    .navbar {
+        padding: 14px 20px;
+        flex-wrap: wrap;
+        position: relative;
     }
 
-    .logo span{
-        font-size:28px;
+    .hamburger {
+        display: flex;
     }
 
-    .logo i{
-        font-size:30px;
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        gap: 8px;
+        padding: 12px 0 4px 0;
+        order: 3;
     }
 
-    .nav-links{
-        width:100%;
-        flex-direction:column;
+    .nav-links.open {
+        display: flex;
     }
 
-    .nav-links li{
-        width:100%;
+    .nav-links li {
+        width: 100%;
     }
 
-    .nav-links a{
-        width:100%;
-        justify-content:center;
+    .nav-links a {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 13px 18px;
+        font-size: 16px;
+        border-radius: 12px;
+        background: rgba(255,255,255,.1);
     }
 
+    .nav-links a:hover {
+        background: white;
+        color: #001847;
+    }
+
+    .logo span {
+        font-size: 22px;
+    }
+
+    .logo i {
+        font-size: 26px;
+    }
 }
 
 </style>
+
+<script>
+const btn = document.getElementById('hamburgerBtn');
+const nav = document.getElementById('navLinks');
+
+btn.addEventListener('click', function() {
+    btn.classList.toggle('active');
+    nav.classList.toggle('open');
+});
+
+nav.querySelectorAll('a').forEach(function(link) {
+    link.addEventListener('click', function() {
+        btn.classList.remove('active');
+        nav.classList.remove('open');
+    });
+});
+</script>
 
 </body>
 </html>
