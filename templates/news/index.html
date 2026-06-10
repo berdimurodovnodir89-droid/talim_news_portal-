@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-So‘nggi Yangiliklar
+So'nggi Yangiliklar
 {% endblock %}
 
 {% block content %}
@@ -31,11 +31,11 @@ So‘nggi Yangiliklar
                 {{ latest_news.0.description|safe|truncatewords:30 }}
             </p>
 
-            <a
+            
                 class="hero-btn"
                 href="{% url 'news_detail' %}?title={{ latest_news.0.title|urlencode }}&description={{ latest_news.0.description|urlencode }}&published={{ latest_news.0.published|urlencode }}&image={{ latest_news.0.image|urlencode }}&link={{ latest_news.0.link|urlencode }}"
             >
-                Batafsil o‘qish
+                Batafsil o'qish
             </a>
 
         </div>
@@ -45,7 +45,7 @@ So‘nggi Yangiliklar
     <div class="hero-right">
 
         <h2>
-            So‘nggi yangiliklar
+            So'nggi yangiliklar
         </h2>
 
         {% for item in latest_news|slice:"1:8" %}
@@ -62,11 +62,11 @@ So‘nggi Yangiliklar
 
             <br><br>
 
-            <a
+            
                 class="small-btn"
                 href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.description|urlencode }}&published={{ item.published|urlencode }}&image={{ item.image|urlencode }}&link={{ item.link|urlencode }}"
             >
-                O‘qish
+                O'qish
             </a>
 
         </div>
@@ -118,11 +118,11 @@ So‘nggi Yangiliklar
 
             <br><br>
 
-            <a
+            
                 class="btn"
                 href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.description|urlencode }}&published={{ item.published|urlencode }}&image={{ item.image|urlencode }}&link={{ item.link|urlencode }}"
             >
-                Batafsil o‘qish
+                Batafsil o'qish
             </a>
 
         </div>
@@ -342,6 +342,130 @@ body{
     border-radius: 12px;
     font-size: 16px;
     font-weight: bold;
+}
+
+/* TABLET */
+@media(max-width:992px){
+
+    .hero-news{
+        grid-template-columns: 1fr;
+        width: 95%;
+    }
+
+    .hero-left{
+        height: 500px;
+    }
+
+    .hero-overlay h1{
+        font-size: 38px;
+    }
+
+    .hero-right{
+        max-height: none;
+    }
+
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+    .hero-news{
+        width: 100%;
+        margin: 0;
+        padding: 12px;
+        box-sizing: border-box;
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .hero-left{
+        height: 300px;
+        border-radius: 16px;
+    }
+
+    .hero-overlay{
+        padding: 18px;
+    }
+
+    .hero-overlay h1{
+        font-size: 20px;
+        margin-bottom: 8px;
+    }
+
+    .hero-overlay p{
+        font-size: 13px;
+        margin-bottom: 12px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .hero-btn{
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+
+    .hero-right{
+        max-height: none;
+        padding: 16px;
+        border-radius: 16px;
+    }
+
+    .hero-right h2{
+        font-size: 20px;
+        margin-bottom: 12px;
+    }
+
+    .side-news h3{
+        font-size: 15px;
+    }
+
+    .section-title{
+        width: 100%;
+        padding: 0 12px;
+        box-sizing: border-box;
+        margin: 25px auto 15px auto;
+    }
+
+    .section-title h2{
+        font-size: 24px;
+    }
+
+    .news-grid{
+        width: 100%;
+        padding: 0 12px;
+        box-sizing: border-box;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-bottom: 40px;
+    }
+
+    .news-card img{
+        height: 180px;
+    }
+
+    .news-content{
+        padding: 15px;
+    }
+
+    .news-content h2{
+        font-size: 18px;
+    }
+
+    .news-content p{
+        font-size: 14px;
+    }
+
+    .btn{
+        padding: 11px 20px;
+        font-size: 14px;
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+        display: block;
+    }
+
 }
 
 </style>
