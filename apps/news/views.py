@@ -87,26 +87,12 @@ def home(request):
 def sport_news(request):
 
     news = filter_news([
-        "sport",
-        "futbol",
-        "superliga",
-        "chempionlar",
-        "premyer",
-        "liga",
-        "ronaldo",
-        "messi",
-        "barselona",
-        "real",
-        "manchester",
-        "goal",
-        "gol",
-        "match",
-        "o‘yin",
-        "turnir",
-        "bokschi",
-        "ufc",
-        "tennis",
-        "nba"
+        "sport", "futbol", "superliga", "chempionlar", "premyer",
+        "liga", "ronaldo", "messi", "barselona", "real", "manchester",
+        "goal", "gol", "match", "o'yin", "turnir", "bokschi",
+        "ufc", "tennis", "nba", "voleybol", "basketbol", "xokkey",
+        "formula", "atletika", "suzish", "gimnastika", "kurash",
+        "boks", "mushtlashish", "chempionat", "olimpiya", "medal"
     ])
 
     return render(
@@ -123,14 +109,13 @@ def sport_news(request):
 def jahon_news(request):
 
     news = filter_news([
-        "rossiya",
-        "ukraina",
-        "aqsh",
-        "yevropa",
-        "xitoy",
-        "jahon",
-        "putin",
-        "tramp"
+        "rossiya", "ukraina", "aqsh", "yevropa", "xitoy",
+        "jahon", "putin", "tramp", "fransiya", "germaniya",
+        "isroil", "eron", "hindiston", "dunyo", "global",
+        "xalqaro", "chet", "tashqi", "davlat", "prezident",
+        "hukumat", "urush", "tinchlik", "shartnoma", "ittifoq",
+        "bmt", "nato", "diplomatiya", "vazir", "qo'shni",
+        "arab", "turk", "britaniya", "yaponiya", "koreya"
     ])
 
     return render(
@@ -147,15 +132,13 @@ def jahon_news(request):
 def texno_news(request):
 
     news = filter_news([
-        "iphone",
-        "android",
-        "texnolog",
-        "ai",
-        "sun’iy",
-        "robot",
-        "internet",
-        "apple",
-        "google"
+        "iphone", "android", "texnolog", "ai", "sun'iy",
+        "robot", "internet", "apple", "google", "microsoft",
+        "dastur", "ilm", "fan", "innovatsiya", "raqamli",
+        "kompyuter", "gadget", "elektron", "samsung", "huawei",
+        "chatgpt", "yapay", "zakat", "sun'iy intellekt",
+        "kiberhujum", "xaker", "crypto", "bitcoin", "blokcheyn",
+        "startap", "it", "cloud", "server", "network"
     ])
 
     return render(
@@ -172,13 +155,13 @@ def texno_news(request):
 def talim_news(request):
 
     news = filter_news([
-        "ta’lim",
-        "maktab",
-        "universitet",
-        "imtihon",
-        "student",
-        "abituriyent",
-        "grant"
+        "ta'lim", "maktab", "universitet", "imtihon",
+        "student", "abituriyent", "grant", "talaba",
+        "o'quvchi", "dtm", "diplom", "ilm", "fan",
+        "magistr", "bakalavr", "kollej", "litsey",
+        "o'qituvchi", "rektor", "dekan", "kafedra",
+        "stipendiya", "bursiya", "kurs", "dars",
+        "sinf", "o'quv", "ta'lim vazirligi", "toshkent"
     ])
 
     return render(
