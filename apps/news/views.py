@@ -136,9 +136,9 @@ def texno_news(request):
         "robot", "internet", "apple", "google", "microsoft",
         "dastur", "ilm", "fan", "innovatsiya", "raqamli",
         "kompyuter", "gadget", "elektron", "samsung", "huawei",
-        "chatgpt", "yapay", "zakat", "sun'iy intellekt",
-        "kiberhujum", "xaker", "crypto", "bitcoin", "blokcheyn",
-        "startap", "it", "cloud", "server", "network"
+        "chatgpt", "sun'iy intellekt", "kiberhujum", "xaker",
+        "crypto", "bitcoin", "blokcheyn", "startap", "it",
+        "cloud", "server", "network"
     ])
 
     return render(
@@ -160,8 +160,8 @@ def talim_news(request):
         "o'quvchi", "dtm", "diplom", "ilm", "fan",
         "magistr", "bakalavr", "kollej", "litsey",
         "o'qituvchi", "rektor", "dekan", "kafedra",
-        "stipendiya", "bursiya", "kurs", "dars",
-        "sinf", "o'quv", "ta'lim vazirligi", "toshkent"
+        "stipendiya", "kurs", "dars", "sinf", "o'quv",
+        "ta'lim vazirligi", "toshkent", "pedagog"
     ])
 
     return render(
@@ -218,6 +218,7 @@ def news_detail(request):
         "news/detail.html",
         context
     )
+
 
 # ABOUT
 def about(request):
