@@ -63,7 +63,7 @@ So'nggi Yangiliklar
             <br><br>
 
             
-                class="small-btn"
+                <a class="small-btn"
                 href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.description|urlencode }}&published={{ item.published|urlencode }}&image={{ item.image|urlencode }}&link={{ item.link|urlencode }}"
             >
                 O'qish
@@ -119,7 +119,7 @@ So'nggi Yangiliklar
             <br><br>
 
             
-                class="btn"
+                <a class="btn"
                 href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.description|urlencode }}&published={{ item.published|urlencode }}&image={{ item.image|urlencode }}&link={{ item.link|urlencode }}"
             >
                 Batafsil o'qish
