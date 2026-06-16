@@ -63,12 +63,11 @@ So'nggi Yangiliklar
             <br><br>
 
             
-                class="small-btn"
-                href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.summary|urlencode }}&published={{ item.published|urlencode }}&link={{ item.link|urlencode }}"
-            >
-                O'qish
+              <a class="small-btn" 
+   href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.summary|urlencode }}&published={{ item.published|urlencode }}&link={{ item.link|urlencode }}"
+>
+    O'qish
             </a>
-
         </div>
 
         {% endfor %}
@@ -437,6 +436,24 @@ body{
         width: 100%;
         text-align: center;
         box-sizing: border-box;
+    }
+
+}
+@media(max-width:768px){
+
+    .hero-news{
+        width:100%;
+        padding:0 15px;
+        box-sizing:border-box;
+    }
+
+    .news-grid{
+        display:block !important;
+    }
+
+    .news-card{
+        width:100% !important;
+        margin-bottom:20px;
     }
 
 }
