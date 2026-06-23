@@ -232,22 +232,15 @@ def search(request):
 
     results = []
 
-    if query:
-        for item in get_news():
+    for item in get_news():
 
-            title = item.get("title", "")
-            description = item.get("summary", "")
-
-            text = (title + " " + description).lower()
-
-            if query in text:
-                results.append({
-                    "title": title,
-                    "description": description,
-                    "published": item.get("published"),
-                    "link": item.get("link"),
-                    "image": f"https://picsum.photos/600/400?random={len(results)+1}"
-                })
+        results.append({
+            "title": item.get("title"),
+            "description": item.get("summary"),
+            "published": item.get("published"),
+            "link": item.get("link"),
+            "image": f"https://picsum.photos/600/400?random={len(results)+1}"
+        })
 
     return render(
         request,
