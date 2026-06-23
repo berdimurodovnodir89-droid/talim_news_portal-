@@ -32,9 +32,8 @@ So'nggi Yangiliklar
             </p>
 
             
-                class="btn"
-                href="{% url 'news_detail' %}?title={{ latest_news.0.title|urlencode }}&description={{ latest_news.0.summary|urlencode }}&published={{ latest_news.0.published|urlencode }}&link={{ latest_news.0.link|urlencode }}"
-            >
+                <a class="btn"
+                href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ latest_news.0.summary|urlencode }}&published={{ latest_news.0.published|urlencode }}&link={{ latest_news.0.link|urlencode }}">
                 Batafsil o'qish
             </a>
 
@@ -63,10 +62,9 @@ So'nggi Yangiliklar
             <br><br>
 
             
-              <a class="small-btn" 
-   href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.summary|urlencode }}&published={{ item.published|urlencode }}&link={{ item.link|urlencode }}"
->
-    O'qish
+              <a class="btn"
+              href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ latest_news.0.summary|urlencode }}&published={{ latest_news.0.published|urlencode }}&link={{ latest_news.0.link|urlencode }}">
+                Batafsil o'qish
             </a>
         </div>
 
@@ -114,7 +112,7 @@ So'nggi Yangiliklar
             <br><br>
 
             
-                class="btn"
+                <a class="btn"
                 href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.summary|urlencode }}&published={{ item.published|urlencode }}&link={{ item.link|urlencode }}"
             >
                 Batafsil o'qish
