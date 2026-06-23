@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Qidiruv
+{% endblock %}
+
+{% block content %}
+
+<div class="container" style="padding:40px;">
+
+    <h1>"{{ query }}" bo‘yicha natijalar</h1>
+
+    <div class="news-grid">
+
+        {% for item in results %}
+
+        <div class="news-card">
+
+            <img src="{{ item.image }}" alt="" width="100%">
+
+            <div class="news-content">
+
+                <h3>{{ item.title }}</h3>
+
+                <p>{{ item.description|safe|truncatewords:20 }}</p>
+
+                <a class="read-more"
+                   href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.description|urlencode }}&published={{ item.published|urlencode }}&link={{ item.link|urlencode }}">
+                    O‘qish
+                </a>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <h2>Natija topilmadi</h2>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

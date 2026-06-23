@@ -16,14 +16,6 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
 </head>
-<script>
-const hamburgerBtn = document.getElementById("hamburgerBtn");
-const navLinks = document.getElementById("navLinks");
-
-hamburgerBtn.addEventListener("click", () => {
-    navLinks.classList.toggle("active");
-});
-</script>
 <body>
 
 <nav class="navbar">
@@ -296,25 +288,104 @@ main {
         font-size: 26px;
     }
 }
+.footer{
+    background:linear-gradient(135deg,#001847,#002f87);
+    color:white;
+    text-align:center;
+    padding:50px 20px;
+    margin-top:50px;
+}
 
+.footer-content{
+    max-width:1200px;
+    margin:auto;
+}
+
+.footer-content h3{
+    font-size:28px;
+    margin-bottom:15px;
+}
+
+.footer-content p{
+    color:#d7e3ff;
+}
+
+.footer-links{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+    margin:20px 0;
+}
+
+.footer-links a{
+    color:white;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.footer-links a:hover{
+    color:#4da3ff;
+}
+
+.copyright{
+    border-top:1px solid rgba(255,255,255,.2);
+    padding-top:20px;
+    margin-top:20px;
+}
+
+.search-box{
+    width:90%;
+    max-width:900px;
+    margin:20px auto;
+}
+
+.search-box form{
+    display:flex;
+}
+
+.search-box input{
+    flex:1;
+    padding:14px;
+    border:1px solid #ddd;
+    border-radius:12px 0 0 12px;
+}
+
+.search-box button{
+    border:none;
+    padding:0 20px;
+    background:#001847;
+    color:white;
+    border-radius:0 12px 12px 0;
+    cursor:pointer;
+}
 </style>
 
 <script>
-const btn = document.getElementById('hamburgerBtn');
-const nav = document.getElementById('navLinks');
+document.addEventListener("DOMContentLoaded", function () {
 
-btn.addEventListener('click', function() {
-    btn.classList.toggle('active');
-    nav.classList.toggle('open');
-});
+    const btn = document.getElementById("hamburgerBtn");
+    const nav = document.getElementById("navLinks");
 
-nav.querySelectorAll('a').forEach(function(link) {
-    link.addEventListener('click', function() {
-        btn.classList.remove('active');
-        nav.classList.remove('open');
-    });
+    if (btn && nav) {
+
+        btn.addEventListener("click", function () {
+            btn.classList.toggle("active");
+            nav.classList.toggle("open");
+        });
+
+        nav.querySelectorAll("a").forEach(function(link) {
+            link.addEventListener("click", function() {
+                btn.classList.remove("active");
+                nav.classList.remove("open");
+            });
+        });
+
+    }
+
 });
 </script>
 
 </body>
 </html>
+
