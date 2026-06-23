@@ -228,19 +228,26 @@ def about(request):
         "news/about.html"
     )
 def search(request):
-    query = request.GET.get("q", "").lower()
-
+    query = request.GET.get("q", "").strip().lower()
     results = []
 
-    for item in get_news():
+    if query:
+        for item in get_news():
 
-        results.append({
-            "title": item.get("title"),
-            "description": item.get("summary"),
-            "published": item.get("published"),
-            "link": item.get("link"),
-            "image": f"https://picsum.photos/600/400?random={len(results)+1}"
-        })
+            title = item.get("title", "")
+            description = item.get("summary", "")
+
+            if (
+                query in title.lower()
+                or query in description.lower()
+            ):
+                results.append({
+                    "title": title,
+                    "description": description,
+                    "published": item.get("published"),
+                    "link": item.get("link"),
+                    "image": f"https://picsum.photos/600/400?random={len(results)+1}"
+                })
 
     return render(
         request,
