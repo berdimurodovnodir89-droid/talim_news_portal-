@@ -1,4 +1,6 @@
 from django.urls import path
+
+from apps.comments import views
 from .views import *
 
 urlpatterns = [
@@ -45,4 +47,5 @@ urlpatterns = [
         name='about'
     ),
 
+    path("search/", views.search, name="search")`
 ]

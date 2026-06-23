@@ -227,3 +227,6 @@ def about(request):
         request,
         "news/about.html"
     )
+def search(request):
+    query = request.GET.get("q", "")
+    return render(request, "news/search.html", {"query": query})
