@@ -45,44 +45,23 @@ def get_news():
     return news
 
 
-def filter_news(keyword_list, category):
+def filter_news(category):
+    news = get_news()
 
-    all_news = get_news()
-    filtered = []
+    for item in news:
+        if category == "sport":
+            item["image"] = random.choice(SPORT_IMAGES)
 
-    for item in all_news:
+        elif category == "talim":
+            item["image"] = random.choice(EDU_IMAGES)
 
-        text = (
-            item["title"] + " " + item["description"]
-        ).lower()
+        elif category == "texno":
+            item["image"] = random.choice(TECH_IMAGES)
 
-        for keyword in keyword_list:
+        else:
+            item["image"] = random.choice(WORLD_IMAGES)
 
-            if keyword.lower() in text:
-
-                if category == "sport":
-                    image = random.choice(SPORT_IMAGES)
-
-                elif category == "talim":
-                    image = random.choice(EDU_IMAGES)
-
-                elif category == "texno":
-                    image = random.choice(TECH_IMAGES)
-
-                else:
-                    image = random.choice(WORLD_IMAGES)
-
-                filtered.append({
-                    "title": item["title"],
-                    "description": item["description"],
-                    "published": item["published"],
-                    "link": item["link"],
-                    "image": image,
-                })
-
-                break
-
-    return filtered
+    return news
 
 
 def home(request):
@@ -96,112 +75,45 @@ def home(request):
 
 
 def sport_news(request):
-
-    news = filter_news(
-        [
-            "sport",
-            "futbol",
-            "ronaldo",
-            "messi",
-            "gol",
-            "tennis",
-            "nba",
-            "boks"
-        ],
-        "sport"
-    )
-
     return render(
         request,
         "news/category.html",
         {
             "title": "Sport Yangiliklari",
-            "news": news
+            "news": filter_news("sport")
         }
     )
 
 
 def talim_news(request):
-
-    news = filter_news(
-        [
-            "ta'lim",
-            "talaba",
-            "universitet",
-            "maktab",
-            "abituriyent",
-            "imtihon",
-            "grant",
-            "stipendiya",
-            "student",
-            "bakalavr",
-            "magistr",
-            "o'qituvchi"
-        ],
-        "talim"
-    )
-
     return render(
         request,
         "news/category.html",
         {
             "title": "Ta'lim Yangiliklari",
-            "news": news
+            "news": filter_news("talim")
         }
     )
 
 
 def texno_news(request):
-
-    news = filter_news(
-        [
-            "ai",
-            "chatgpt",
-            "google",
-            "apple",
-            "android",
-            "iphone",
-            "robot",
-            "server",
-            "cloud",
-            "texnolog"
-        ],
-        "texno"
-    )
-
     return render(
         request,
         "news/category.html",
         {
             "title": "Texnologiya Yangiliklari",
-            "news": news
+            "news": filter_news("texno")
         }
     )
 
 
 def jahon_news(request):
-
-    news = filter_news(
-        [
-            "rossiya",
-            "ukraina",
-            "aqsh",
-            "xitoy",
-            "yevropa",
-            "prezident",
-            "davlat",
-            "jahon",
-            "xalqaro"
-        ],
-        "jahon"
-    )
-
     return render(
         request,
         "news/category.html",
         {
             "title": "Jahon Yangiliklari",
-            "news": news
+            "news": filter_news("jahon")
         }
     )
 
@@ -224,7 +136,10 @@ def news_detail(request):
 
 
 def about(request):
-    return render(request, "news/about.html")
+    return render(
+        request,
+        "news/about.html"
+    )
 
 
 def search(request):
