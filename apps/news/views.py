@@ -1,7 +1,11 @@
 import feedparser
 from django.shortcuts import render
 
+import feedparser
 
+feed = feedparser.parse("https://kun.uz/news/rss")
+
+print(feed.entries[0].keys())
 def get_news():
 
     feed = feedparser.parse(
@@ -193,7 +197,10 @@ def news_detail(request):
 
             "link": item.get("link"),
 
-            "image": f"https://picsum.photos/600/400?random={len(related_news)+1}"
+            "image": item.get("media_content", [{}])[0].get(
+                "url",
+                "https://via.placeholder.com/600x400"
+)
 
         })
 
