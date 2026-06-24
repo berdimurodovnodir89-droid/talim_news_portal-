@@ -1,13 +1,13 @@
-
 import random
 import feedparser
 
 from bs4 import BeautifulSoup
 from django.shortcuts import render
-SPORT_RSS = "https://kun.uz/news/rss?f=sport"
-TECH_RSS = "https://kun.uz/news/rss?f=technology"
+
 
 RSS_URL = "https://kun.uz/news/rss"
+SPORT_RSS = "https://kun.uz/news/rss?f=sport"
+TECH_RSS = "https://kun.uz/news/rss?f=technology"
 
 
 def get_image(item):
@@ -19,14 +19,21 @@ def get_image(item):
         pass
 
     try:
-        if "links" in item:
-            for link in item.links:
-                if "image" in str(link):
-                    return link.href
+        summary = item.get("summary", "")
+
+        soup = BeautifulSoup(summary, "html.parser")
+
+        img = soup.find("img")
+
+        if img and img.get("src"):
+            return img["src"]
+
     except:
         pass
 
-    return "https://picsum.photos/800/500"
+    return f"https://picsum.photos/800/500?random={random.randint(1,999999)}"
+
+
 def get_news(rss_url=RSS_URL):
 
     feed = feedparser.parse(rss_url)
@@ -44,6 +51,7 @@ def get_news(rss_url=RSS_URL):
         })
 
     return news
+
 
 def filter_news(keywords):
 
@@ -75,66 +83,83 @@ def home(request):
 
 def sport_news(request):
 
+    news = get_news(SPORT_RSS)
+
     return render(
         request,
         "news/category.html",
         {
             "title": "Sport Yangiliklari",
-            "news": get_news(SPORT_RSS)
+            "news": news
         }
     )
 
 
 def talim_news(request):
 
+    news = filter_news([
+        "ta'lim",
+        "maktab",
+        "universitet",
+        "talaba",
+        "abituriyent",
+        "imtihon",
+        "o'qituvchi",
+        "maktabgacha"
+    ])
+
+    if not news:
+        news = get_news()[:15]
+
     return render(
         request,
         "news/category.html",
         {
             "title": "Ta'lim Yangiliklari",
-            "news": filter_news([
-                "ta'lim",
-                "maktab",
-                "universitet",
-                "talaba",
-                "abituriyent",
-                "imtihon",
-                "o'qituvchi"
-            ])
+            "news": news
         }
     )
 
 
 def texno_news(request):
 
+    news = get_news(TECH_RSS)
+
     return render(
         request,
         "news/category.html",
         {
             "title": "Texnologiya Yangiliklari",
-            "news": get_news(TECH_RSS)
+            "news": news
         }
     )
 
 
 def jahon_news(request):
 
+    news = filter_news([
+        "rossiya",
+        "ukraina",
+        "putin",
+        "tramp",
+        "aqsh",
+        "xitoy",
+        "yevropa",
+        "bmt",
+        "urush",
+        "eron",
+        "isroil"
+    ])
+
+    if not news:
+        news = get_news()[:20]
+
     return render(
         request,
         "news/category.html",
         {
             "title": "Jahon Yangiliklari",
-            "news": filter_news([
-                "rossiya",
-                "ukraina",
-                "putin",
-                "tramp",
-                "aqsh",
-                "xitoy",
-                "yevropa",
-                "bmt",
-                "urush"
-            ])
+            "news": news
         }
     )
 
@@ -179,15 +204,17 @@ def search(request):
 
     results = []
 
-    for item in get_news():
+    if query:
 
-        text = (
-            item["title"] + " " +
-            item["description"]
-        ).lower()
+        for item in get_news():
 
-        if query and query in text:
-            results.append(item)
+            text = (
+                item["title"] + " " +
+                item["description"]
+            ).lower()
+
+            if query in text:
+                results.append(item)
 
     return render(
         request,
