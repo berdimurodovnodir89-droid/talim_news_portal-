@@ -4,34 +4,32 @@ import feedparser
 
 from bs4 import BeautifulSoup
 from django.shortcuts import render
-
+SPORT_RSS = "https://kun.uz/news/rss?f=sport"
+TECH_RSS = "https://kun.uz/news/rss?f=technology"
 
 RSS_URL = "https://kun.uz/news/rss"
 
 
 def get_image(item):
 
-    if "media_content" in item:
-        try:
+    try:
+        if "media_content" in item:
             return item.media_content[0]["url"]
-        except:
-            pass
+    except:
+        pass
 
-    summary = item.get("summary", "")
+    try:
+        if "links" in item:
+            for link in item.links:
+                if "image" in str(link):
+                    return link.href
+    except:
+        pass
 
-    soup = BeautifulSoup(summary, "html.parser")
+    return "https://picsum.photos/800/500"
+def get_news(rss_url=RSS_URL):
 
-    img = soup.find("img")
-
-    if img and img.get("src"):
-        return img["src"]
-
-    return f"https://picsum.photos/800/500?random={random.randint(1,9999)}"
-
-
-def get_news():
-
-    feed = feedparser.parse(RSS_URL)
+    feed = feedparser.parse(rss_url)
 
     news = []
 
@@ -46,7 +44,6 @@ def get_news():
         })
 
     return news
-
 
 def filter_news(keywords):
 
@@ -83,17 +80,7 @@ def sport_news(request):
         "news/category.html",
         {
             "title": "Sport Yangiliklari",
-            "news": filter_news([
-                "sport",
-                "futbol",
-                "ronaldo",
-                "messi",
-                "gol",
-                "tennis",
-                "ufc",
-                "nba",
-                "boks"
-            ])
+            "news": get_news(SPORT_RSS)
         }
     )
 
@@ -125,16 +112,7 @@ def texno_news(request):
         "news/category.html",
         {
             "title": "Texnologiya Yangiliklari",
-            "news": filter_news([
-                "texnologiya",
-                "ai",
-                "google",
-                "apple",
-                "microsoft",
-                "robot",
-                "internet",
-                "it"
-            ])
+            "news": get_news(TECH_RSS)
         }
     )
 
