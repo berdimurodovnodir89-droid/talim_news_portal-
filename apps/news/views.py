@@ -27,6 +27,8 @@ WORLD_IMAGES = [
     "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=800",
 ]
 
+SPORT_RSS = "https://kun.uz/news/rss?f=sport"
+TECH_RSS = "https://kun.uz/news/rss?f=technology"
 
 def get_news():
     feed = feedparser.parse("https://kun.uz/news/rss")
@@ -75,23 +77,31 @@ def home(request):
 
 
 def sport_news(request):
+    news = filter_news(
+        ["sport", "futbol", "ronaldo", "messi", "gol", "tennis", "nba", "boks"],
+        "sport"
+    )
+
+    print("SPORT:", len(news))
+
     return render(
         request,
         "news/category.html",
         {
             "title": "Sport Yangiliklari",
-            "news": filter_news("sport")
+            "news": news
         }
     )
 
-
 def talim_news(request):
+    news = get_news()[:10]
+
     return render(
         request,
         "news/category.html",
         {
             "title": "Ta'lim Yangiliklari",
-            "news": filter_news("talim")
+            "news": news
         }
     )
 
