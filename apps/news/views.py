@@ -2,15 +2,76 @@ import feedparser
 from django.shortcuts import render
 
 import feedparser
+def get_category_image(category):
+
+    images = {
+        "sport": [
+            "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800",
+            "https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=800",
+            "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800",
+        ],
+
+        "talim": [
+            "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=800",
+            "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800",
+            "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800",
+        ],
+
+        "texno": [
+            "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800",
+            "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800",
+            "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800",
+        ],
+
+        "jahon": [
+            "https://images.unsplash.com/photo-1521295121783-8a321d551ad2?w=800",
+            "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800",
+            "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=800",
+        ],
+
+        "home": [
+            "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800",
+            "https://images.unsplash.com/photo-1495020689067-958852a7765e?w=800",
+            "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800",
+        ]
+    }
+
+    import random
+    return random.choice(images.get(category, images["home"]))
 
 feed = feedparser.parse("https://kun.uz/news/rss")
-SPORT_IMAGE = "https://images.unsplash.com/photo-1547347298-4074fc3086f0"
+SPORT_IMAGES = [
+    "https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=800",
+    "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800",
+    "https://images.unsplash.com/photo-1508098682722-e99c643e7485?w=800",
+    "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800",
+    "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800",
+]
 TECH_IMAGE = "https://images.unsplash.com/photo-1518770660439-4636190af475"
 EDU_IMAGE = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
 WORLD_IMAGE = "https://images.unsplash.com/photo-1521295121783-8a321d551ad2"
 DEFAULT_IMAGE = "https://images.unsplash.com/photo-1504711434969-e33886168f5c"
 print(feed.entries[0].keys())
+def get_sport_image(title):
 
+    title = title.lower()
+
+    if "ronaldo" in title:
+        return "https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=800"
+
+    if "messi" in title:
+        return "https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=800"
+
+    if "futbol" in title:
+        return "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800"
+
+    if "tennis" in title:
+        return "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?w=800"
+
+    if "boks" in title:
+        return "https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=800"
+
+    return "https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=800"
 def get_news():
 
     feed = feedparser.parse("https://kun.uz/news/rss")
@@ -29,33 +90,34 @@ def get_news():
 
     return news
 
-def filter_news(keyword_list, image_url):
+def filter_news(keyword_list, category):
+
+    all_news = get_news()
 
     filtered = []
 
-    for item in get_news():
+    for item in all_news:
 
-        title = item.get("title", "")
-        description = item.get("description", "")
+        title = item.get("title", "").lower()
+        description = item.get("summary", "").lower()
 
-        text = (title + " " + description).lower()
+        text = title + " " + description
 
         for keyword in keyword_list:
 
             if keyword in text:
 
                 filtered.append({
-                    "title": title,
-                    "description": description,
-                    "published": item.get("published", ""),
-                    "link": item.get("link", ""),
-                    "image": image_url
+                    "title": item.get("title"),
+                    "description": item.get("summary"),
+                    "published": item.get("published"),
+                    "link": item.get("link"),
+                    "image": get_category_image(category)
                 })
 
                 break
 
     return filtered
-
 # HOME
 def home(request):
 
