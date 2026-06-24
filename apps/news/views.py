@@ -252,3 +252,62 @@ def search(request):
             "results": results
         }
     )
+import re
+import feedparser
+from bs4 import BeautifulSoup
+
+
+def get_image(item):
+
+    if "media_content" in item:
+        try:
+            return item.media_content[0]["url"]
+        except:
+            pass
+
+    summary = item.get("summary", "")
+
+    soup = BeautifulSoup(summary, "html.parser")
+
+    img = soup.find("img")
+
+    if img and img.get("src"):
+        return img["src"]
+
+    return "https://picsum.photos/800/500"
+
+
+def get_news():
+
+    feed = feedparser.parse("https://kun.uz/news/rss")
+
+    news = []
+
+    for item in feed.entries:
+
+        news.append({
+            "title": item.get("title", ""),
+            "description": item.get("summary", ""),
+            "published": item.get("published", ""),
+            "link": item.get("link", ""),
+            "image": get_image(item),
+        })
+
+    return news
+
+
+def filter_news(keywords):
+
+    results = []
+
+    for item in get_news():
+
+        text = (
+            item["title"] + " " +
+            item["description"]
+        ).lower()
+
+        if any(k.lower() in text for k in keywords):
+            results.append(item)
+
+    return results
