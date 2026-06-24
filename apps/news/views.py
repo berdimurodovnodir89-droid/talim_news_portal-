@@ -234,14 +234,19 @@ def search(request):
 
     news = get_news()
 
+    print("QIDIRUV:", query)
+    print("YANGILIKLAR SONI:", len(news))
+
     for item in news:
 
         title = item.get("title", "")
         description = item.get("summary", "")
 
+        print(title)
+
         search_text = f"{title} {description}".lower()
 
-        if query and query in search_text:
+        if query in search_text:
 
             results.append({
                 "title": title,
@@ -250,6 +255,8 @@ def search(request):
                 "link": item.get("link", ""),
                 "image": f"https://picsum.photos/600/400?random={len(results)+1}"
             })
+
+    print("TOPILGANLAR:", len(results))
 
     return render(
         request,
