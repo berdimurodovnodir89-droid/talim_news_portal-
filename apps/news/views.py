@@ -7,52 +7,46 @@ feed = feedparser.parse("https://kun.uz/news/rss")
 
 print(feed.entries[0].keys())
 def get_news():
+    feed = feedparser.parse("https://kun.uz/news/rss")
 
-    feed = feedparser.parse(
-        "https://kun.uz/news/rss"
-    )
+    news = []
 
-    return feed.entries
+    for item in feed.entries:
+
+        image = "https://via.placeholder.com/600x400"
+
+        if "media_content" in item:
+            image = item.media_content[0].get("url", image)
+
+        elif "media_thumbnail" in item:
+            image = item.media_thumbnail[0].get("url", image)
+
+        news.append({
+            "title": item.get("title", ""),
+            "description": item.get("summary", ""),
+            "published": item.get("published", ""),
+            "link": item.get("link", ""),
+            "image": image,
+        })
+
+    return news
 
 
 def filter_news(keyword_list):
 
-    all_news = get_news()
-
     filtered = []
 
-    for item in all_news:
+    for item in get_news():
 
-        title = item.get(
-            "title",
-            ""
+        text = (
+            item["title"] + " " + item["description"]
         ).lower()
-
-        description = item.get(
-            "summary",
-            ""
-        ).lower()
-
-        text = title + " " + description
 
         for keyword in keyword_list:
 
             if keyword in text:
 
-                filtered.append({
-
-                    "title": item.get("title"),
-
-                    "description": item.get("summary"),
-
-                    "published": item.get("published"),
-
-                    "link": item.get("link"),
-
-                    "image": f"https://picsum.photos/600/400?random={len(filtered)+1}"
-
-                })
-
+                filtered.append(item)
                 break
 
     return filtered
@@ -61,32 +55,13 @@ def filter_news(keyword_list):
 # HOME
 def home(request):
 
-    latest_news = []
-
-    for item in get_news():
-
-        latest_news.append({
-
-            "title": item.get("title"),
-
-            "description": item.get("summary"),
-
-            "published": item.get("published"),
-
-            "link": item.get("link"),
-
-            "image": f"https://picsum.photos/600/400?random={len(latest_news)+1}"
-
-        })
-
     return render(
         request,
         "news/index.html",
         {
-            "latest_news": latest_news
+            "latest_news": get_news()
         }
     )
-
 
 def sport_news(request):
 
@@ -235,35 +210,19 @@ def about(request):
         "news/about.html"
     )
 def search(request):
+
     query = request.GET.get("q", "").strip().lower()
 
     results = []
 
-    news = get_news()
+    for item in get_news():
 
-    print("QIDIRUV:", query)
-    print("YANGILIKLAR SONI:", len(news))
+        text = (
+            item["title"] + " " + item["description"]
+        ).lower()
 
-    for item in news:
-
-        title = item.get("title", "")
-        description = item.get("summary", "")
-
-        print(title)
-
-        search_text = f"{title} {description}".lower()
-
-        if query in search_text:
-
-            results.append({
-                "title": title,
-                "description": description,
-                "published": item.get("published", ""),
-                "link": item.get("link", ""),
-                "image": f"https://picsum.photos/600/400?random={len(results)+1}"
-            })
-
-    print("TOPILGANLAR:", len(results))
+        if query and query in text:
+            results.append(item)
 
     return render(
         request,
