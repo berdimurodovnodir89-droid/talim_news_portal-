@@ -1,6 +1,48 @@
 import feedparser
 from django.shortcuts import render
 
+def filter_news(keyword_list, category):
+
+    all_news = get_news()
+
+    filtered = []
+
+    for item in all_news:
+
+        title = item.get("title", "").lower()
+        description = item.get("summary", "").lower()
+
+        text = title + " " + description
+
+        for keyword in keyword_list:
+
+            if keyword in text:
+
+                filtered.append({
+                    "title": item.get("title"),
+                    "description": item.get("summary"),
+                    "published": item.get("published"),
+                    "link": item.get("link"),
+                    "image": get_category_image(category)
+                })
+
+                break
+
+    return filtered
+# HOME
+def home(request):
+
+    return render(
+        request,
+        "news/index.html",
+        {
+            "latest_news": get_news()
+        }
+    )
+
+import feedparser
+from django.shortcuts import render
+
 import feedparser
 def get_category_image(category):
 
@@ -40,38 +82,7 @@ def get_category_image(category):
     return random.choice(images.get(category, images["home"]))
 
 feed = feedparser.parse("https://kun.uz/news/rss")
-SPORT_IMAGES = [
-    "https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=800",
-    "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800",
-    "https://images.unsplash.com/photo-1508098682722-e99c643e7485?w=800",
-    "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800",
-    "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=800",
-]
-TECH_IMAGE = "https://images.unsplash.com/photo-1518770660439-4636190af475"
-EDU_IMAGE = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
-WORLD_IMAGE = "https://images.unsplash.com/photo-1521295121783-8a321d551ad2"
-DEFAULT_IMAGE = "https://images.unsplash.com/photo-1504711434969-e33886168f5c"
-print(feed.entries[0].keys())
-def get_sport_image(title):
 
-    title = title.lower()
-
-    if "ronaldo" in title:
-        return "https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=800"
-
-    if "messi" in title:
-        return "https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=800"
-
-    if "futbol" in title:
-        return "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800"
-
-    if "tennis" in title:
-        return "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?w=800"
-
-    if "boks" in title:
-        return "https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=800"
-
-    return "https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=800"
 def get_news():
 
     feed = feedparser.parse("https://kun.uz/news/rss")
@@ -132,10 +143,21 @@ def home(request):
 def sport_news(request):
 
     news = filter_news([
-    "sport","futbol","ronaldo","messi","gol",
-    "match","turnir","ufc","tennis","nba",
-    "basketbol","boks","olimpiya"
-], SPORT_IMAGE)
+        "sport",
+        "futbol",
+        "ronaldo",
+        "messi",
+        "gol",
+        "match",
+        "turnir",
+        "ufc",
+        "tennis",
+        "nba",
+        "basketbol",
+        "boks",
+        "olimpiya"
+    ], "sport")
+
     return render(
         request,
         "news/category.html",
@@ -157,7 +179,7 @@ def jahon_news(request):
         "hukumat", "urush", "tinchlik", "shartnoma", "ittifoq",
         "bmt", "nato", "diplomatiya", "vazir", "qo'shni",
         "arab", "turk", "britaniya", "yaponiya", "koreya"
-    ], WORLD_IMAGE)
+    ], "jahon")
 
     return render(
         request,
@@ -180,7 +202,7 @@ def texno_news(request):
         "chatgpt", "sun'iy intellekt", "kiberhujum", "xaker",
         "crypto", "bitcoin", "blokcheyn", "startap", "it",
         "cloud", "server", "network"
-    ], TECH_IMAGE)
+    ], "texnologiya")
 
     return render(
         request,
@@ -203,7 +225,144 @@ def talim_news(request):
         "o'qituvchi", "rektor", "dekan", "kafedra",
         "stipendiya", "kurs", "dars", "sinf", "o'quv",
         "ta'lim vazirligi", "toshkent", "pedagog"
-    ], EDU_IMAGE)
+    ], "talim"  )
+
+    return render(
+        request,
+        "news/category.html",
+        {
+            "title": "Ta'lim Yangiliklari",
+            "news": news
+        }
+    )
+
+
+# DETAIL
+def news_detail(request):
+
+    related_news = []
+
+    all_news = get_news()
+
+    for item in all_news[:6]:
+
+        related_news.append({
+
+            "title": item.get("title"),
+
+            "description": item.get("summary"),
+
+            "published": item.get("published"),
+
+            "link": item.get("link"),
+
+            "image": item.get("media_content", [{}])[0].get(
+                "url",
+                "https://via.placeholder.com/600x400"
+)
+
+        })
+
+    context = {
+
+        "title": request.GET.get("title"),
+
+        "description": request.GET.get("description"),
+
+        "published": request.GET.get("published"),
+
+        "image": request.GET.get("image"),
+
+        "link": request.GET.get("link"),
+
+        "related_news": related_news
+
+    }
+
+    return render(
+        request,
+        "news/detail.html",
+        context
+    )
+
+
+# ABOUT
+def about(request):
+
+    return render(
+        request,
+        "news/about.html"
+    )
+def search(request):
+
+    query = request.GET.get("q", "").strip().lower()
+
+    results = []
+
+    for item in get_news():
+
+        text = (
+            item["title"] + " " + item["description"]
+        ).lower()
+
+        if query and query in text:
+            results.append(item)
+
+    return render(
+        request,
+        "news/search.html",
+        {
+            "query": query,
+            "results": results
+        }
+    )
+
+# JAHON
+def jahon_news(request):
+
+    news = filter_news([
+        "rossiya","ukraina","aqsh","yevropa","xitoy",
+        "jahon","putin","tramp","fransiya","germaniya",
+        "isroil","eron","hindiston","dunyo","global",
+        "xalqaro","davlat","prezident","hukumat"
+    ], "jahon")
+
+    return render(
+        request,
+        "news/category.html",
+        {
+            "title": "Jahon Yangiliklari",
+            "news": news
+        }
+    )
+
+
+# TEXNOLOGIYA
+def texno_news(request):
+
+    news = filter_news([
+        "iphone","android","texnolog","ai","robot",
+        "internet","apple","google","microsoft",
+        "chatgpt","xaker","bitcoin","server"
+    ], "texno")
+
+    return render(
+        request,
+        "news/category.html",
+        {
+            "title": "Texnologiya Yangiliklari",
+            "news": news
+        }
+    )
+
+# TALIM
+def talim_news(request):
+
+    news = filter_news([
+        "ta'lim","maktab","universitet","imtihon",
+        "student","abituriyent","grant","talaba",
+        "o'quvchi","dtm","diplom"
+    ], "talim")
 
     return render(
         request,
