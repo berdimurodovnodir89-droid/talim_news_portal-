@@ -38,7 +38,7 @@ WORLD_IMAGES = [
 def get_image(item):
 
     try:
-        if "media_content" in item:
+        if hasattr(item, "media_content"):
             return item.media_content[0]["url"]
     except:
         pass
@@ -46,29 +46,39 @@ def get_image(item):
     try:
         summary = item.get("summary", "")
         soup = BeautifulSoup(summary, "html.parser")
+
         img = soup.find("img")
 
         if img and img.get("src"):
             return img["src"]
+
     except:
         pass
 
-    return f"https://picsum.photos/800/500?random={random.randint(1,999999)}"
-
+    return "https://picsum.photos/800/500"
 
 def get_news(rss_url=RSS_URL):
-
     feed = feedparser.parse(rss_url)
 
     news = []
 
     for item in feed.entries:
+
+        category = ""
+
+        if hasattr(item, "tags"):
+            try:
+                category = item.tags[0]["term"]
+            except:
+                pass
+
         news.append({
             "title": item.get("title", ""),
             "description": item.get("summary", ""),
             "published": item.get("published", ""),
             "link": item.get("link", ""),
             "image": get_image(item),
+            "category": category,
         })
 
     return news
@@ -112,8 +122,20 @@ def home(request):
 
 def sport_news(request):
 
-    news = get_news(SPORT_RSS)
-    news = set_category_images(news, SPORT_IMAGES)
+    keywords = [
+        "futbol",
+        "sport",
+        "chempionat",
+        "olimpiada",
+        "bokschi",
+        "tennis",
+        "liga",
+        "match",
+        "murabbiy",
+        "jamoa"
+    ]
+
+    news = filter_news(keywords)
 
     return render(
         request,
@@ -127,8 +149,18 @@ def sport_news(request):
 
 def talim_news(request):
 
-    news = get_news()[:20]
-    news = set_category_images(news, EDU_IMAGES)
+    keywords = [
+        "ta'lim",
+        "maktab",
+        "universitet",
+        "imtihon",
+        "abituriyent",
+        "talaba",
+        "o'qituvchi",
+        "grant"
+    ]
+
+    news = filter_news(keywords)
 
     return render(
         request,
@@ -142,8 +174,20 @@ def talim_news(request):
 
 def texno_news(request):
 
-    news = get_news(TECH_RSS)
-    news = set_category_images(news, TECH_IMAGES)
+    keywords = [
+        "texnologiya",
+        "ai",
+        "sun'iy intellekt",
+        "google",
+        "apple",
+        "microsoft",
+        "iphone",
+        "android",
+        "internet",
+        "it"
+    ]
+
+    news = filter_news(keywords)
 
     return render(
         request,
@@ -153,7 +197,6 @@ def texno_news(request):
             "news": news
         }
     )
-
 
 def jahon_news(request):
 
