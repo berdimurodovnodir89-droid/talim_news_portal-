@@ -10,51 +10,51 @@ EDU_IMAGE = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
 WORLD_IMAGE = "https://images.unsplash.com/photo-1521295121783-8a321d551ad2"
 DEFAULT_IMAGE = "https://images.unsplash.com/photo-1504711434969-e33886168f5c"
 print(feed.entries[0].keys())
+
 def get_news():
+
     feed = feedparser.parse("https://kun.uz/news/rss")
 
     news = []
 
     for item in feed.entries:
 
-        image = "https://via.placeholder.com/600x400"
-
-        if "media_content" in item:
-            image = item.media_content[0].get("url", image)
-
-        elif "media_thumbnail" in item:
-            image = item.media_thumbnail[0].get("url", image)
-
         news.append({
             "title": item.get("title", ""),
             "description": item.get("summary", ""),
             "published": item.get("published", ""),
             "link": item.get("link", ""),
-            "image": image,
+            "image": DEFAULT_IMAGE,
         })
 
     return news
 
-
-def filter_news(keyword_list):
+def filter_news(keyword_list, image_url):
 
     filtered = []
 
     for item in get_news():
 
-        text = (
-            item["title"] + " " + item["description"]
-        ).lower()
+        title = item.get("title", "")
+        description = item.get("description", "")
+
+        text = (title + " " + description).lower()
 
         for keyword in keyword_list:
 
             if keyword in text:
 
-                filtered.append(item)
+                filtered.append({
+                    "title": title,
+                    "description": description,
+                    "published": item.get("published", ""),
+                    "link": item.get("link", ""),
+                    "image": image_url
+                })
+
                 break
 
     return filtered
-
 
 # HOME
 def home(request):
@@ -70,14 +70,10 @@ def home(request):
 def sport_news(request):
 
     news = filter_news([
-        "sport", "futbol", "superliga", "chempionlar", "premyer",
-        "liga", "ronaldo", "messi", "barselona", "real", "manchester",
-        "goal", "gol", "match", "o'yin", "turnir", "bokschi",
-        "ufc", "tennis", "nba", "voleybol", "basketbol", "xokkey",
-        "formula", "atletika", "suzish", "gimnastika", "kurash",
-        "boks", "mushtlashish", "chempionat", "olimpiya", "medal"
-    ])
-
+    "sport","futbol","ronaldo","messi","gol",
+    "match","turnir","ufc","tennis","nba",
+    "basketbol","boks","olimpiya"
+], SPORT_IMAGE)
     return render(
         request,
         "news/category.html",
@@ -99,7 +95,7 @@ def jahon_news(request):
         "hukumat", "urush", "tinchlik", "shartnoma", "ittifoq",
         "bmt", "nato", "diplomatiya", "vazir", "qo'shni",
         "arab", "turk", "britaniya", "yaponiya", "koreya"
-    ])
+    ], WORLD_IMAGE)
 
     return render(
         request,
@@ -122,7 +118,7 @@ def texno_news(request):
         "chatgpt", "sun'iy intellekt", "kiberhujum", "xaker",
         "crypto", "bitcoin", "blokcheyn", "startap", "it",
         "cloud", "server", "network"
-    ])
+    ], TECH_IMAGE)
 
     return render(
         request,
@@ -145,7 +141,7 @@ def talim_news(request):
         "o'qituvchi", "rektor", "dekan", "kafedra",
         "stipendiya", "kurs", "dars", "sinf", "o'quv",
         "ta'lim vazirligi", "toshkent", "pedagog"
-    ])
+    ], EDU_IMAGE)
 
     return render(
         request,
