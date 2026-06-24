@@ -1,47 +1,74 @@
+
 import feedparser
+import random
+
 from django.shortcuts import render
+
+
+SPORT_IMAGES = [
+    "https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=800",
+    "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800",
+    "https://images.unsplash.com/photo-1508098682722-e99c643e7485?w=800",
+]
+
+EDU_IMAGES = [
+    "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=800",
+    "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800",
+    "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800",
+]
+
+TECH_IMAGES = [
+    "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800",
+    "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800",
+    "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800",
+]
+
+WORLD_IMAGES = [
+    "https://images.unsplash.com/photo-1521295121783-8a321d551ad2?w=800",
+    "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800",
+    "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=800",
+]
 
 
 RSS_URL = "https://kun.uz/news/rss"
 
 
 def get_news():
+
     feed = feedparser.parse(RSS_URL)
 
     news = []
 
     for item in feed.entries:
 
-        image = "https://picsum.photos/800/500"
-
-        try:
-            if "media_content" in item:
-                image = item.media_content[0]["url"]
-        except:
-            pass
-
         news.append({
             "title": item.get("title", ""),
             "description": item.get("summary", ""),
             "published": item.get("published", ""),
             "link": item.get("link", ""),
-            "image": image,
+            "image": random.choice(WORLD_IMAGES),
         })
 
     return news
 
 
-def filter_news(keywords):
+def filter_news(keywords, images):
+
+    news = get_news()
 
     results = []
 
-    for item in get_news():
+    for item in news:
 
         text = (
-            item["title"] + " " + item["description"]
+            item["title"] + " " +
+            item["description"]
         ).lower()
 
-        if any(word.lower() in text for word in keywords):
+        if any(word in text for word in keywords):
+
+            item["image"] = random.choice(images)
+
             results.append(item)
 
     return results
@@ -49,29 +76,33 @@ def filter_news(keywords):
 
 def home(request):
 
+    latest_news = get_news()
+
     return render(
         request,
         "news/index.html",
         {
-            "latest_news": get_news()
+            "latest_news": latest_news
         }
     )
 
 
 def sport_news(request):
 
-    news = filter_news([
-        "sport",
-        "futbol",
-        "messi",
-        "ronaldo",
-        "gol",
-        "tennis",
-        "nba",
-        "boks",
-        "chempionat",
-        "jch"
-    ])
+    news = filter_news(
+        [
+            "sport",
+            "futbol",
+            "ronaldo",
+            "messi",
+            "tennis",
+            "nba",
+            "boks",
+            "chempion",
+            "gol"
+        ],
+        SPORT_IMAGES
+    )
 
     return render(
         request,
@@ -85,18 +116,18 @@ def sport_news(request):
 
 def talim_news(request):
 
-    news = filter_news([
-        "ta'lim",
-        "universitet",
-        "maktab",
-        "imtihon",
-        "abituriyent",
-        "talaba",
-        "student",
-        "o'qituvchi",
-        "magistr",
-        "bakalavr"
-    ])
+    news = filter_news(
+        [
+            "ta'lim",
+            "maktab",
+            "universitet",
+            "talaba",
+            "imtihon",
+            "o‘qituvchi",
+            "abituriyent"
+        ],
+        EDU_IMAGES
+    )
 
     return render(
         request,
@@ -110,20 +141,20 @@ def talim_news(request):
 
 def texno_news(request):
 
-    news = filter_news([
-        "texnologiya",
-        "ai",
-        "sun'iy intellekt",
-        "robot",
-        "internet",
-        "google",
-        "apple",
-        "microsoft",
-        "tesla",
-        "it",
-        "chatgpt",
-        "openai"
-    ])
+    news = filter_news(
+        [
+            "texnologiya",
+            "ai",
+            "sun'iy intellekt",
+            "google",
+            "apple",
+            "microsoft",
+            "robot",
+            "internet",
+            "it"
+        ],
+        TECH_IMAGES
+    )
 
     return render(
         request,
@@ -137,21 +168,20 @@ def texno_news(request):
 
 def jahon_news(request):
 
-    news = filter_news([
-        "rossiya",
-        "ukraina",
-        "amerika",
-        "aqsh",
-        "xitoy",
-        "yevropa",
-        "putin",
-        "trump",
-        "bmt",
-        "nato",
-        "isroil",
-        "eron",
-        "turkiya"
-    ])
+    news = filter_news(
+        [
+            "rossiya",
+            "ukraina",
+            "tramp",
+            "putin",
+            "xitoy",
+            "aqsh",
+            "yevropa",
+            "bmt",
+            "urush"
+        ],
+        WORLD_IMAGES
+    )
 
     return render(
         request,
@@ -165,12 +195,18 @@ def jahon_news(request):
 
 def news_detail(request):
 
+    related_news = random.sample(
+        get_news(),
+        min(6, len(get_news()))
+    )
+
     context = {
         "title": request.GET.get("title"),
         "description": request.GET.get("description"),
         "published": request.GET.get("published"),
         "image": request.GET.get("image"),
         "link": request.GET.get("link"),
+        "related_news": related_news,
     }
 
     return render(
@@ -190,22 +226,23 @@ def about(request):
 
 def search(request):
 
-    query = request.GET.get("q", "").strip().lower()
+    query = request.GET.get(
+        "q",
+        ""
+    ).lower().strip()
 
     results = []
 
-    if query:
+    for item in get_news():
 
-        for item in get_news():
+        text = (
+            item["title"] + " " +
+            item["description"]
+        ).lower()
 
-            title = item["title"].lower()
-            description = item["description"].lower()
+        if query and query in text:
 
-            if (
-                query in title or
-                query in description
-            ):
-                results.append(item)
+            results.append(item)
 
     return render(
         request,
