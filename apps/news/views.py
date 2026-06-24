@@ -1,6 +1,8 @@
 import feedparser
-from django.shortcuts import render
 import random
+from django.shortcuts import render
+
+
 SPORT_IMAGES = [
     "https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=800",
     "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800",
@@ -24,6 +26,25 @@ WORLD_IMAGES = [
     "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800",
     "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=800",
 ]
+
+
+def get_news():
+    feed = feedparser.parse("https://kun.uz/news/rss")
+
+    news = []
+
+    for item in feed.entries:
+        news.append({
+            "title": item.get("title", ""),
+            "description": item.get("summary", ""),
+            "published": item.get("published", ""),
+            "link": item.get("link", ""),
+            "image": random.choice(WORLD_IMAGES),
+        })
+
+    return news
+
+
 def filter_news(keyword_list, category):
 
     all_news = get_news()
@@ -31,14 +52,13 @@ def filter_news(keyword_list, category):
 
     for item in all_news:
 
-        title = item.get("title", "").lower()
-        description = item.get("description", "").lower()
-
-        text = title + " " + description
+        text = (
+            item["title"] + " " + item["description"]
+        ).lower()
 
         for keyword in keyword_list:
 
-            if keyword in text:
+            if keyword.lower() in text:
 
                 if category == "sport":
                     image = random.choice(SPORT_IMAGES)
@@ -53,19 +73,19 @@ def filter_news(keyword_list, category):
                     image = random.choice(WORLD_IMAGES)
 
                 filtered.append({
-                    "title": item.get("title"),
-                    "description": item.get("description"),
-                    "published": item.get("published"),
-                    "link": item.get("link"),
+                    "title": item["title"],
+                    "description": item["description"],
+                    "published": item["published"],
+                    "link": item["link"],
                     "image": image,
                 })
 
                 break
 
     return filtered
-# HOME
-def home(request):
 
+
+def home(request):
     return render(
         request,
         "news/index.html",
@@ -73,80 +93,23 @@ def home(request):
             "latest_news": get_news()
         }
     )
-def get_news():
 
-    feed = feedparser.parse("https://kun.uz/news/rss")
-
-    news = []
-
-    for item in feed.entries:
-
-        news.append({
-            "title": item.get("title", ""),
-            "description": item.get("summary", ""),
-            "published": item.get("published", ""),
-            "link": item.get("link", ""),
-            "image": get_category_image("home"),
-        })
-
-    return news
-
-def filter_news(keyword_list, category):
-
-    all_news = get_news()
-
-    filtered = []
-
-    for item in all_news:
-
-        title = item.get("title", "").lower()
-        description = item.get("summary", "").lower()
-
-        text = title + " " + description
-
-        for keyword in keyword_list:
-
-            if keyword in text:
-
-                filtered.append({
-                    "title": item.get("title"),
-                    "description": item.get("summary"),
-                    "published": item.get("published"),
-                    "link": item.get("link"),
-                    "image": get_category_image(category)
-                })
-
-                break
-
-    return filtered
-# HOME
-def home(request):
-
-    return render(
-        request,
-        "news/index.html",
-        {
-            "latest_news": get_news()
-        }
-    )
 
 def sport_news(request):
 
-    news = filter_news([
-        "sport",
-        "futbol",
-        "ronaldo",
-        "messi",
-        "gol",
-        "match",
-        "turnir",
-        "ufc",
-        "tennis",
-        "nba",
-        "basketbol",
-        "boks",
-        "olimpiya"
-    ], "sport")
+    news = filter_news(
+        [
+            "sport",
+            "futbol",
+            "ronaldo",
+            "messi",
+            "gol",
+            "tennis",
+            "nba",
+            "boks"
+        ],
+        "sport"
+    )
 
     return render(
         request,
@@ -158,77 +121,25 @@ def sport_news(request):
     )
 
 
-# JAHON
-def jahon_news(request):
-
-    news = filter_news([
-        "rossiya", "ukraina", "aqsh", "yevropa", "xitoy",
-        "jahon", "putin", "tramp", "fransiya", "germaniya",
-        "isroil", "eron", "hindiston", "dunyo", "global",
-        "xalqaro", "chet", "tashqi", "davlat", "prezident",
-        "hukumat", "urush", "tinchlik", "shartnoma", "ittifoq",
-        "bmt", "nato", "diplomatiya", "vazir", "qo'shni",
-        "arab", "turk", "britaniya", "yaponiya", "koreya"
-    ], "jahon")
-
-    return render(
-        request,
-        "news/category.html",
-        {
-            "title": "Jahon Yangiliklari",
-            "news": news
-        }
-    )
-
-
-# TEXNOLOGIYA
-def texno_news(request):
-
-    news = filter_news([
-        "iphone", "android", "texnolog", "ai", "sun'iy",
-        "robot", "internet", "apple", "google", "microsoft",
-        "dastur", "ilm", "fan", "innovatsiya", "raqamli",
-        "kompyuter", "gadget", "elektron", "samsung", "huawei",
-        "chatgpt", "sun'iy intellekt", "kiberhujum", "xaker",
-        "crypto", "bitcoin", "blokcheyn", "startap", "it",
-        "cloud", "server", "network"
-    ], "texnologiya")
-
-    return render(
-        request,
-        "news/category.html",
-        {
-            "title": "Texnologiya Yangiliklari",
-            "news": news
-        }
-    )
-
-
-# TALIM
 def talim_news(request):
 
-    news = filter_news([
-        "ta'lim",
-        "talaba",
-        "universitet",
-        "maktab",
-        "abituriyent",
-        "o‘quv",
-        "o'quv",
-        "imtihon",
-        "stipendiya",
-        "grant",
-        "student",
-        "bakalavr",
-        "magistr",
-        "diplom",
-        "fan",
-        "ilm",
-        "vazirlik",
-        "rektor",
-        "o'qituvchi",
-        "pedagog"
-    ], "talim")
+    news = filter_news(
+        [
+            "ta'lim",
+            "talaba",
+            "universitet",
+            "maktab",
+            "abituriyent",
+            "imtihon",
+            "grant",
+            "stipendiya",
+            "student",
+            "bakalavr",
+            "magistr",
+            "o'qituvchi"
+        ],
+        "talim"
+    )
 
     return render(
         request,
@@ -240,95 +151,50 @@ def talim_news(request):
     )
 
 
-# DETAIL
-def news_detail(request):
+def texno_news(request):
 
-    related_news = []
-
-    all_news = get_news()
-
-    for item in all_news[:6]:
-
-        related_news.append({
-
-            "title": item.get("title"),
-
-            "description": item.get("summary"),
-
-            "published": item.get("published"),
-
-            "link": item.get("link"),
-
-            "image": item.get("media_content", [{}])[0].get(
-                "url",
-                "https://via.placeholder.com/600x400"
-)
-
-        })
-
-    context = {
-
-        "title": request.GET.get("title"),
-
-        "description": request.GET.get("description"),
-
-        "published": request.GET.get("published"),
-
-        "image": request.GET.get("image"),
-
-        "link": request.GET.get("link"),
-
-        "related_news": related_news
-
-    }
-
-    return render(
-        request,
-        "news/detail.html",
-        context
+    news = filter_news(
+        [
+            "ai",
+            "chatgpt",
+            "google",
+            "apple",
+            "android",
+            "iphone",
+            "robot",
+            "server",
+            "cloud",
+            "texnolog"
+        ],
+        "texno"
     )
 
-
-# ABOUT
-def about(request):
-
     return render(
         request,
-        "news/about.html"
-    )
-def search(request):
-
-    query = request.GET.get("q", "").strip().lower()
-
-    results = []
-
-    for item in get_news():
-
-        text = (
-            item["title"] + " " + item["description"]
-        ).lower()
-
-        if query and query in text:
-            results.append(item)
-
-    return render(
-        request,
-        "news/search.html",
+        "news/category.html",
         {
-            "query": query,
-            "results": results
+            "title": "Texnologiya Yangiliklari",
+            "news": news
         }
     )
 
-# JAHON
+
 def jahon_news(request):
 
-    news = filter_news([
-        "rossiya","ukraina","aqsh","yevropa","xitoy",
-        "jahon","putin","tramp","fransiya","germaniya",
-        "isroil","eron","hindiston","dunyo","global",
-        "xalqaro","davlat","prezident","hukumat"
-    ], "jahon")
+    news = filter_news(
+        [
+            "rossiya",
+            "ukraina",
+            "aqsh",
+            "xitoy",
+            "yevropa",
+            "prezident",
+            "davlat",
+            "jahon",
+            "xalqaro"
+        ],
+        "jahon"
+    )
 
     return render(
         request,
@@ -340,83 +206,14 @@ def jahon_news(request):
     )
 
 
-# TEXNOLOGIYA
-def texno_news(request):
-
-    news = filter_news([
-        "iphone","android","texnolog","ai","robot",
-        "internet","apple","google","microsoft",
-        "chatgpt","xaker","bitcoin","server"
-    ], "texno")
-
-    return render(
-        request,
-        "news/category.html",
-        {
-            "title": "Texnologiya Yangiliklari",
-            "news": news
-        }
-    )
-
-# TALIM
-def talim_news(request):
-
-    news = filter_news([
-        "ta'lim","maktab","universitet","imtihon",
-        "student","abituriyent","grant","talaba",
-        "o'quvchi","dtm","diplom"
-    ], "talim")
-
-    return render(
-        request,
-        "news/category.html",
-        {
-            "title": "Ta'lim Yangiliklari",
-            "news": news
-        }
-    )
-
-
-# DETAIL
 def news_detail(request):
 
-    related_news = []
-
-    all_news = get_news()
-
-    for item in all_news[:6]:
-
-        related_news.append({
-
-            "title": item.get("title"),
-
-            "description": item.get("summary"),
-
-            "published": item.get("published"),
-
-            "link": item.get("link"),
-
-            "image": item.get("media_content", [{}])[0].get(
-                "url",
-                "https://via.placeholder.com/600x400"
-)
-
-        })
-
     context = {
-
         "title": request.GET.get("title"),
-
         "description": request.GET.get("description"),
-
         "published": request.GET.get("published"),
-
         "image": request.GET.get("image"),
-
         "link": request.GET.get("link"),
-
-        "related_news": related_news
-
     }
 
     return render(
@@ -426,13 +223,10 @@ def news_detail(request):
     )
 
 
-# ABOUT
 def about(request):
+    return render(request, "news/about.html")
 
-    return render(
-        request,
-        "news/about.html"
-    )
+
 def search(request):
 
     query = request.GET.get("q", "").strip().lower()
