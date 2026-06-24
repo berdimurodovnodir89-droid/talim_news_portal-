@@ -1,16 +1,38 @@
 import feedparser
 from django.shortcuts import render
+import random
+SPORT_IMAGES = [
+    "https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=800",
+    "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800",
+    "https://images.unsplash.com/photo-1508098682722-e99c643e7485?w=800",
+]
 
+EDU_IMAGES = [
+    "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=800",
+    "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800",
+    "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800",
+]
+
+TECH_IMAGES = [
+    "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800",
+    "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800",
+    "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800",
+]
+
+WORLD_IMAGES = [
+    "https://images.unsplash.com/photo-1521295121783-8a321d551ad2?w=800",
+    "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800",
+    "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=800",
+]
 def filter_news(keyword_list, category):
 
     all_news = get_news()
-
     filtered = []
 
     for item in all_news:
 
         title = item.get("title", "").lower()
-        description = item.get("summary", "").lower()
+        description = item.get("description", "").lower()
 
         text = title + " " + description
 
@@ -18,12 +40,24 @@ def filter_news(keyword_list, category):
 
             if keyword in text:
 
+                if category == "sport":
+                    image = random.choice(SPORT_IMAGES)
+
+                elif category == "talim":
+                    image = random.choice(EDU_IMAGES)
+
+                elif category == "texno":
+                    image = random.choice(TECH_IMAGES)
+
+                else:
+                    image = random.choice(WORLD_IMAGES)
+
                 filtered.append({
                     "title": item.get("title"),
-                    "description": item.get("summary"),
+                    "description": item.get("description"),
                     "published": item.get("published"),
                     "link": item.get("link"),
-                    "image": get_category_image(category)
+                    "image": image,
                 })
 
                 break
@@ -39,50 +73,6 @@ def home(request):
             "latest_news": get_news()
         }
     )
-
-import feedparser
-from django.shortcuts import render
-
-import feedparser
-def get_category_image(category):
-
-    images = {
-        "sport": [
-            "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800",
-            "https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=800",
-            "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800",
-        ],
-
-        "talim": [
-            "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=800",
-            "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800",
-            "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800",
-        ],
-
-        "texno": [
-            "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800",
-            "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800",
-            "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800",
-        ],
-
-        "jahon": [
-            "https://images.unsplash.com/photo-1521295121783-8a321d551ad2?w=800",
-            "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800",
-            "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=800",
-        ],
-
-        "home": [
-            "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800",
-            "https://images.unsplash.com/photo-1495020689067-958852a7765e?w=800",
-            "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=800",
-        ]
-    }
-
-    import random
-    return random.choice(images.get(category, images["home"]))
-
-feed = feedparser.parse("https://kun.uz/news/rss")
-
 def get_news():
 
     feed = feedparser.parse("https://kun.uz/news/rss")
@@ -218,14 +208,27 @@ def texno_news(request):
 def talim_news(request):
 
     news = filter_news([
-        "ta'lim", "maktab", "universitet", "imtihon",
-        "student", "abituriyent", "grant", "talaba",
-        "o'quvchi", "dtm", "diplom", "ilm", "fan",
-        "magistr", "bakalavr", "kollej", "litsey",
-        "o'qituvchi", "rektor", "dekan", "kafedra",
-        "stipendiya", "kurs", "dars", "sinf", "o'quv",
-        "ta'lim vazirligi", "toshkent", "pedagog"
-    ], "talim"  )
+        "ta'lim",
+        "talaba",
+        "universitet",
+        "maktab",
+        "abituriyent",
+        "o‘quv",
+        "o'quv",
+        "imtihon",
+        "stipendiya",
+        "grant",
+        "student",
+        "bakalavr",
+        "magistr",
+        "diplom",
+        "fan",
+        "ilm",
+        "vazirlik",
+        "rektor",
+        "o'qituvchi",
+        "pedagog"
+    ], "talim")
 
     return render(
         request,
