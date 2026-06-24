@@ -96,7 +96,7 @@ def get_news():
             "description": item.get("summary", ""),
             "published": item.get("published", ""),
             "link": item.get("link", ""),
-            "image": DEFAULT_IMAGE,
+            "image": get_category_image("home"),
         })
 
     return news
