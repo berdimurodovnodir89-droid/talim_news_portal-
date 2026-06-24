@@ -1,391 +1,138 @@
-<!DOCTYPE html>
-<html lang="uz">
 
-<head>
+{% extends 'base.html' %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>
-        {% block title %}
-        KUN News Portal
-        {% endblock %}
-    </title>
-
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-
-</head>
-<body>
-
-<nav class="navbar">
-
-    <a href="/" class="logo">
-        <i class="fa-solid fa-newspaper"></i>
-        <span>KUN NEWS</span>
-    </a>
-
-    <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
-
-    <ul class="nav-links" id="navLinks">
-        <li>
-            <a href="/">
-                <i class="fa-solid fa-house"></i>
-                Asosiy
-            </a>
-        </li>
-        <li>
-            <a href="/talim/">
-                <i class="fa-solid fa-graduation-cap"></i>
-                Ta'lim
-            </a>
-        </li>
-        <li>
-            <a href="/texnologiya/">
-                <i class="fa-solid fa-microchip"></i>
-                Texnologiya
-            </a>
-        </li>
-        <li>
-            <a href="/sport/">
-                <i class="fa-solid fa-futbol"></i>
-                Sport
-            </a>
-        </li>
-        <li>
-            <a href="/jahon/">
-                <i class="fa-solid fa-earth-americas"></i>
-                Jahon
-            </a>
-        </li>
-        <li>
-            <a href="/about/">
-                <i class="fa-solid fa-circle-info"></i>
-                Dastur haqida
-            </a>
-        </li>
-    </ul>
-
-</nav>
-<div class="search-box">
-    <form action="{% url 'search' %}" method="GET">
-        <input type="text" name="q" placeholder="Yangilik qidirish...">
-        <button type="submit">
-            <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-    </form>
-</div>
-<main>
-{% block content %}
+{% block title %}
+Qidiruv natijalari
 {% endblock %}
-</main>
-<footer class="footer">
-    <div class="footer-content">
-        <h3>KUN NEWS</h3>
-        <p>O‘zbekiston va jahon yangiliklari portali</p>
 
-        <div class="footer-links">
-            <a href="/">Asosiy</a>
-            <a href="/talim/">Ta'lim</a>
-            <a href="/texnologiya/">Texnologiya</a>
-            <a href="/sport/">Sport</a>
-            <a href="/jahon/">Jahon</a>
+{% block content %}
+
+<div class="search-page">
+
+    <h1>
+        "{{ query }}" bo'yicha natijalar
+    </h1>
+
+    {% if results %}
+
+    <div class="news-grid">
+
+        {% for item in results %}
+
+        <div class="news-card">
+
+            <img
+                src="{{ item.image|default:'https://picsum.photos/600/400' }}"
+                alt="{{ item.title }}"
+            >
+
+            <div class="news-content">
+
+                <span class="date">
+                    {{ item.published }}
+                </span>
+
+                <h2>
+                    {{ item.title }}
+                </h2>
+
+                <p>
+                    {{ item.description|safe|truncatewords:20 }}
+                </p>
+
+                <a
+                    href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.description|urlencode }}&published={{ item.published|urlencode }}&image={{ item.image|urlencode }}&link={{ item.link|urlencode }}"
+                    class="btn"
+                >
+                    Batafsil
+                </a>
+
+            </div>
+
         </div>
 
-        <p class="copyright">
-            © 2026 KUN NEWS. Barcha huquqlar himoyalangan.
-        </p>
+        {% endfor %}
+
     </div>
-</footer>
+
+    {% else %}
+
+    <div class="empty">
+        Hech qanday yangilik topilmadi.
+    </div>
+
+    {% endif %}
+
+</div>
 
 <style>
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    background: #eef3ff;
-    font-family: Arial, sans-serif;
-}
-
-/* ===== NAVBAR ===== */
-
-.navbar {
-    width: 100%;
-    background: linear-gradient(135deg, #001847, #002f87);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 40px;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 5px 20px rgba(0,0,0,.15);
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    color: white;
-}
-
-.logo i {
-    color: #4da3ff;
-    font-size: 32px;
-}
-
-.logo span {
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: 1px;
-}
-
-/* ===== NAV LINKS ===== */
-
-.nav-links {
-    display: flex;
-    list-style: none;
-    gap: 10px;
-    align-items: center;
-}
-
-.nav-links a {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 18px;
-    background: rgba(255,255,255,.1);
-    border-radius: 12px;
-    color: white;
-    text-decoration: none;
-    font-size: 15px;
-    font-weight: 600;
-    transition: .25s;
-    white-space: nowrap;
-}
-
-.nav-links a:hover {
-    background: white;
-    color: #001847;
-    transform: translateY(-2px);
-}
-
-.nav-links i {
-    font-size: 16px;
-}
-
-/* ===== HAMBURGER TUGMA ===== */
-
-.hamburger {
-    display: none;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 30px;
-    height: 22px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-}
-
-.hamburger span {
-    display: block;
-    width: 100%;
-    height: 3px;
-    background: white;
-    border-radius: 3px;
-    transition: .3s;
-}
-
-.hamburger.active span:nth-child(1) {
-    transform: translateY(9.5px) rotate(45deg);
-}
-.hamburger.active span:nth-child(2) {
-    opacity: 0;
-}
-.hamburger.active span:nth-child(3) {
-    transform: translateY(-9.5px) rotate(-45deg);
-}
-
-/* ===== MAIN CONTENT ===== */
-
-main {
-    min-height: 80vh;
-}
-
-/* ===== TABLET (max 1100px) ===== */
-
-@media (max-width: 1100px) {
-    .navbar {
-        padding: 16px 24px;
-    }
-
-    .nav-links a {
-        padding: 9px 13px;
-        font-size: 14px;
-    }
-}
-
-/* ===== MOBILE (max 768px) ===== */
-
-@media (max-width: 768px) {
-
-    .navbar {
-        padding: 14px 20px;
-        flex-wrap: wrap;
-        position: relative;
-    }
-
-    .hamburger {
-        display: flex;
-    }
-
-    .nav-links {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        gap: 8px;
-        padding: 12px 0 4px 0;
-        order: 3;
-    }
-
-    .nav-links.open {
-        display: flex;
-    }
-
-    .nav-links li {
-        width: 100%;
-    }
-
-    .nav-links a {
-        width: 100%;
-        justify-content: flex-start;
-        padding: 13px 18px;
-        font-size: 16px;
-        border-radius: 12px;
-        background: rgba(255,255,255,.1);
-    }
-
-    .nav-links a:hover {
-        background: white;
-        color: #001847;
-    }
-
-    .logo span {
-        font-size: 22px;
-    }
-
-    .logo i {
-        font-size: 26px;
-    }
-}
-.footer{
-    background:linear-gradient(135deg,#001847,#002f87);
-    color:white;
-    text-align:center;
-    padding:50px 20px;
-    margin-top:50px;
-}
-
-.footer-content{
-    max-width:1200px;
+.search-page{
+    width:92%;
     margin:auto;
+    padding:30px 0;
 }
 
-.footer-content h3{
-    font-size:28px;
-    margin-bottom:15px;
+.search-page h1{
+    font-size:42px;
+    color:#001847;
+    margin-bottom:30px;
 }
 
-.footer-content p{
-    color:#d7e3ff;
+.news-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:25px;
 }
 
-.footer-links{
-    display:flex;
-    justify-content:center;
-    gap:20px;
-    flex-wrap:wrap;
-    margin:20px 0;
+.news-card{
+    background:white;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
 }
 
-.footer-links a{
-    color:white;
-    text-decoration:none;
-    font-weight:600;
+.news-card img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
 }
 
-.footer-links a:hover{
-    color:#4da3ff;
+.news-content{
+    padding:20px;
 }
 
-.copyright{
-    border-top:1px solid rgba(255,255,255,.2);
-    padding-top:20px;
-    margin-top:20px;
+.news-content h2{
+    font-size:24px;
+    margin:12px 0;
 }
 
-.search-box{
-    width:90%;
-    max-width:900px;
-    margin:20px auto;
+.news-content p{
+    color:#555;
+    line-height:1.7;
 }
 
-.search-box form{
-    display:flex;
+.date{
+    color:#4a73c9;
 }
 
-.search-box input{
-    flex:1;
-    padding:14px;
-    border:1px solid #ddd;
-    border-radius:12px 0 0 12px;
-}
-
-.search-box button{
-    border:none;
-    padding:0 20px;
+.btn{
+    display:inline-block;
+    margin-top:15px;
+    padding:10px 20px;
     background:#001847;
     color:white;
-    border-radius:0 12px 12px 0;
-    cursor:pointer;
+    text-decoration:none;
+    border-radius:8px;
 }
+
+.empty{
+    text-align:center;
+    padding:80px;
+    font-size:28px;
+    color:#777;
+}
+
 </style>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-    const btn = document.getElementById("hamburgerBtn");
-    const nav = document.getElementById("navLinks");
-
-    if (btn && nav) {
-
-        btn.addEventListener("click", function () {
-            btn.classList.toggle("active");
-            nav.classList.toggle("open");
-        });
-
-        nav.querySelectorAll("a").forEach(function(link) {
-            link.addEventListener("click", function() {
-                btn.classList.remove("active");
-                nav.classList.remove("open");
-            });
-        });
-
-    }
-
-});
-</script>
-
-</body>
-</html>
-
+{% endblock %}
