@@ -1,13 +1,38 @@
+
 import random
 import feedparser
 
 from bs4 import BeautifulSoup
 from django.shortcuts import render
 
-
 RSS_URL = "https://kun.uz/news/rss"
 SPORT_RSS = "https://kun.uz/news/rss?f=sport"
 TECH_RSS = "https://kun.uz/news/rss?f=technology"
+
+
+SPORT_IMAGES = [
+    "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800",
+    "https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=800",
+    "https://images.unsplash.com/photo-1508098682722-e99c643e7485?w=800",
+]
+
+TECH_IMAGES = [
+    "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800",
+    "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800",
+    "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800",
+]
+
+EDU_IMAGES = [
+    "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=800",
+    "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800",
+    "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800",
+]
+
+WORLD_IMAGES = [
+    "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800",
+    "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=800",
+    "https://images.unsplash.com/photo-1521295121783-8a321d551ad2?w=800",
+]
 
 
 def get_image(item):
@@ -20,14 +45,11 @@ def get_image(item):
 
     try:
         summary = item.get("summary", "")
-
         soup = BeautifulSoup(summary, "html.parser")
-
         img = soup.find("img")
 
         if img and img.get("src"):
             return img["src"]
-
     except:
         pass
 
@@ -41,7 +63,6 @@ def get_news(rss_url=RSS_URL):
     news = []
 
     for item in feed.entries:
-
         news.append({
             "title": item.get("title", ""),
             "description": item.get("summary", ""),
@@ -49,6 +70,14 @@ def get_news(rss_url=RSS_URL):
             "link": item.get("link", ""),
             "image": get_image(item),
         })
+
+    return news
+
+
+def set_category_images(news, images):
+
+    for item in news:
+        item["image"] = random.choice(images)
 
     return news
 
@@ -64,7 +93,7 @@ def filter_news(keywords):
             item["description"]
         ).lower()
 
-        if any(keyword.lower() in text for keyword in keywords):
+        if any(word.lower() in text for word in keywords):
             results.append(item)
 
     return results
@@ -84,6 +113,7 @@ def home(request):
 def sport_news(request):
 
     news = get_news(SPORT_RSS)
+    news = set_category_images(news, SPORT_IMAGES)
 
     return render(
         request,
@@ -97,19 +127,8 @@ def sport_news(request):
 
 def talim_news(request):
 
-    news = filter_news([
-        "ta'lim",
-        "maktab",
-        "universitet",
-        "talaba",
-        "abituriyent",
-        "imtihon",
-        "o'qituvchi",
-        "maktabgacha"
-    ])
-
-    if not news:
-        news = get_news()[:15]
+    news = get_news()[:20]
+    news = set_category_images(news, EDU_IMAGES)
 
     return render(
         request,
@@ -124,6 +143,7 @@ def talim_news(request):
 def texno_news(request):
 
     news = get_news(TECH_RSS)
+    news = set_category_images(news, TECH_IMAGES)
 
     return render(
         request,
@@ -153,6 +173,8 @@ def jahon_news(request):
 
     if not news:
         news = get_news()[:20]
+
+    news = set_category_images(news, WORLD_IMAGES)
 
     return render(
         request,
@@ -197,10 +219,7 @@ def about(request):
 
 def search(request):
 
-    query = request.GET.get(
-        "q",
-        ""
-    ).strip().lower()
+    query = request.GET.get("q", "").strip().lower()
 
     results = []
 
