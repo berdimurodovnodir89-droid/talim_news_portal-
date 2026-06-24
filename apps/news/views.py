@@ -4,7 +4,11 @@ from django.shortcuts import render
 import feedparser
 
 feed = feedparser.parse("https://kun.uz/news/rss")
-
+SPORT_IMAGE = "https://images.unsplash.com/photo-1547347298-4074fc3086f0"
+TECH_IMAGE = "https://images.unsplash.com/photo-1518770660439-4636190af475"
+EDU_IMAGE = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
+WORLD_IMAGE = "https://images.unsplash.com/photo-1521295121783-8a321d551ad2"
+DEFAULT_IMAGE = "https://images.unsplash.com/photo-1504711434969-e33886168f5c"
 print(feed.entries[0].keys())
 def get_news():
     feed = feedparser.parse("https://kun.uz/news/rss")
