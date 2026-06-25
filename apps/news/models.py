@@ -1,38 +1,66 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=100)
-    slug = models.SlugField(unique=True)
+class RSSSource(models.Model):
+    CATEGORY_CHOICES = (
+        ("asosiy", "Asosiy"),
+        ("texnologiya", "Texnologiya"),
+        ("talim", "Talim"),
+        ("sport", "Sport"),
+        ("jahon", "Jahon"),
+    )
+
+    name = models.CharField(max_length=200)
+    url = models.URLField(unique=True)
+    category_hint = models.CharField(
+        max_length=50,
+        choices=CATEGORY_CHOICES,
+        default="asosiy"
+    )
+
+    is_active = models.BooleanField(default=True)
+
+    last_fetched = models.DateTimeField(
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return self.name
 
 
-class News(models.Model):
-    title = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
+class NewsItem(models.Model):
 
-    image = models.ImageField(upload_to='news/')
+    title = models.CharField(max_length=500)
 
-    short_description = models.TextField()
-
-    content = models.TextField()
-
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.CASCADE
+    link = models.URLField(
+        unique=True
     )
 
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE
+    summary = models.TextField(
+        blank=True
     )
 
-    views = models.PositiveIntegerField(default=0)
+    pub_date = models.DateTimeField()
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    image_url = models.URLField(
+        blank=True
+    )
+
+    source = models.CharField(
+        max_length=100
+    )
+
+    category = models.CharField(
+        max_length=50
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    class Meta:
+        ordering = ["-pub_date"]
 
     def __str__(self):
         return self.title

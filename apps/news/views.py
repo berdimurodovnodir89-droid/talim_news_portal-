@@ -1,9 +1,14 @@
+from django.core.paginator import Paginator
 
 import random
 import feedparser
 
 from bs4 import BeautifulSoup
 from django.shortcuts import render
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
+
+from .models import NewsItem
 
 RSS_URL = "https://kun.uz/news/rss"
 SPORT_RSS = "https://kun.uz/news/rss?f=sport"
@@ -111,31 +116,33 @@ def filter_news(keywords):
 
 def home(request):
 
+    news_list = NewsItem.objects.all()
+
+    paginator = Paginator(
+        news_list,
+        20
+    )
+
+    page_number = request.GET.get("page")
+
+    latest_news = paginator.get_page(
+        page_number
+    )
+
     return render(
         request,
         "news/index.html",
         {
-            "latest_news": get_news()
+            "latest_news": latest_news
         }
     )
 
 
 def sport_news(request):
 
-    keywords = [
-        "futbol",
-        "sport",
-        "chempionat",
-        "olimpiada",
-        "bokschi",
-        "tennis",
-        "liga",
-        "match",
-        "murabbiy",
-        "jamoa"
-    ]
-
-    news = filter_news(keywords)
+    news = NewsItem.objects.filter(
+        category="sport"
+    ).order_by("-pub_date")
 
     return render(
         request,
@@ -147,77 +154,11 @@ def sport_news(request):
     )
 
 
-def talim_news(request):
-
-    keywords = [
-        "ta'lim",
-        "maktab",
-        "universitet",
-        "imtihon",
-        "abituriyent",
-        "talaba",
-        "o'qituvchi",
-        "grant"
-    ]
-
-    news = filter_news(keywords)
-
-    return render(
-        request,
-        "news/category.html",
-        {
-            "title": "Ta'lim Yangiliklari",
-            "news": news
-        }
-    )
-
-
-def texno_news(request):
-
-    keywords = [
-        "texnologiya",
-        "ai",
-        "sun'iy intellekt",
-        "google",
-        "apple",
-        "microsoft",
-        "iphone",
-        "android",
-        "internet",
-        "it"
-    ]
-
-    news = filter_news(keywords)
-
-    return render(
-        request,
-        "news/category.html",
-        {
-            "title": "Texnologiya Yangiliklari",
-            "news": news
-        }
-    )
-
 def jahon_news(request):
 
-    news = filter_news([
-        "rossiya",
-        "ukraina",
-        "putin",
-        "tramp",
-        "aqsh",
-        "xitoy",
-        "yevropa",
-        "bmt",
-        "urush",
-        "eron",
-        "isroil"
-    ])
-
-    if not news:
-        news = get_news()[:20]
-
-    news = set_category_images(news, WORLD_IMAGES)
+    news = NewsItem.objects.filter(
+        category="jahon"
+    ).order_by("-pub_date")
 
     return render(
         request,
@@ -229,24 +170,53 @@ def jahon_news(request):
     )
 
 
-def news_detail(request):
+def texno_news(request):
 
-    all_news = get_news()
+    news = NewsItem.objects.filter(
+        category="texnologiya"
+    ).order_by("-pub_date")
 
-    related_news = random.sample(
-        all_news,
-        min(6, len(all_news))
+    return render(
+        request,
+        "news/category.html",
+        {
+            "title": "Texnologiya Yangiliklari",
+            "news": news
+        }
     )
+
+
+def talim_news(request):
+
+    news = NewsItem.objects.filter(
+        category="talim"
+    ).order_by("-pub_date")
+
+    return render(
+        request,
+        "news/category.html",
+        {
+            "title": "Talim Yangiliklari",
+            "news": news
+        }
+    )
+
+
+def news_detail(request, pk):
+    news = get_object_or_404(
+        NewsItem,
+        pk=pk
+    )
+
+    related_news = NewsItem.objects.exclude(
+        pk=pk
+    )[:6]
 
     return render(
         request,
         "news/detail.html",
         {
-            "title": request.GET.get("title"),
-            "description": request.GET.get("description"),
-            "published": request.GET.get("published"),
-            "image": request.GET.get("image"),
-            "link": request.GET.get("link"),
+            "news": news,
             "related_news": related_news,
         }
     )
@@ -262,21 +232,19 @@ def about(request):
 
 def search(request):
 
-    query = request.GET.get("q", "").strip().lower()
+    query = request.GET.get(
+        "q",
+        ""
+    )
 
     results = []
 
     if query:
 
-        for item in get_news():
-
-            text = (
-                item["title"] + " " +
-                item["description"]
-            ).lower()
-
-            if query in text:
-                results.append(item)
+        results = NewsItem.objects.filter(
+            Q(title__icontains=query) |
+            Q(summary__icontains=query)
+        )
 
     return render(
         request,

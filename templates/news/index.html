@@ -33,8 +33,7 @@ So'nggi Yangiliklar
 
             
                <a  class="hero-btn"
-                href="{% url 'news_detail' %}?title={{ latest_news.0.title|urlencode }}&description={{ latest_news.0.description|urlencode }}&published={{ latest_news.0.published|urlencode }}&image={{ latest_news.0.image|urlencode }}&link={{ latest_news.0.link|urlencode }}"
-            >
+                href="{% url 'news_detail' latest_news.0.id %}">
                 Batafsil o'qish
             </a>
 
@@ -57,14 +56,14 @@ So'nggi Yangiliklar
             </h3>
 
             <span>
-                {{ item.published }}
+                {{ item.pub_date }}
             </span>
 
             <br><br>
 
             
                 <a class="small-btn"
-                href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.description|urlencode }}&published={{ item.published|urlencode }}&image={{ item.image|urlencode }}&link={{ item.link|urlencode }}"
+                        href="{% url 'news_detail' item.id %}"
             >
                 O'qish
             </a>
@@ -94,7 +93,7 @@ So'nggi Yangiliklar
     <div class="news-card">
 
         <img
-            src="{{ item.image }}"
+            src="{{ item.image_url }}"
             alt="{{ item.title }}"
         >
 
@@ -109,18 +108,19 @@ So'nggi Yangiliklar
             </h2>
 
             <p>
-                {{ item.description|safe|truncatewords:20 }}
+                {{ item.summary|safe|truncatewords:20 }}
             </p>
 
             <span class="news-date">
-                {{ item.published }}
+                {{ item.pub_date }}
             </span>
 
             <br><br>
 
             
-                <a class="btn"
-                href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.description|urlencode }}&published={{ item.published|urlencode }}&image={{ item.image|urlencode }}&link={{ item.link|urlencode }}"
+            <a
+                class="btn"
+                href="{% url 'news_detail' item.id %}"
             >
                 Batafsil o'qish
             </a>
@@ -130,6 +130,34 @@ So'nggi Yangiliklar
     </div>
 
     {% endfor %}
+
+    <div class="pagination">
+
+    {% if latest_news.has_previous %}
+        <a href="?page=1">
+            Birinchi
+        </a>
+
+        <a href="?page={{ latest_news.previous_page_number }}">
+            Oldingi
+        </a>
+    {% endif %}
+
+    <span>
+        {{ latest_news.number }}
+        /
+        {{ latest_news.paginator.num_pages }}
+    </span>
+
+    {% if latest_news.has_next %}
+        <a href="?page={{ latest_news.next_page_number }}">
+            Keyingi
+        </a>
+
+        <a href="?page={{ latest_news.paginator.num_pages }}">
+            Oxirgi
+        </a>
+    {% endif %}
 
 </div>
 

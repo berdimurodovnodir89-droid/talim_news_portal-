@@ -2,7 +2,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{{ title }}
+{{ news.title }}
 {% endblock %}
 
 {% block content %}
@@ -13,8 +13,8 @@
 
         <div class="detail-image">
             <img
-                src="{{ image|default:'https://picsum.photos/1200/700' }}"
-                alt="{{ title }}"
+                src="{{ news.image_url|default:'https://picsum.photos/1200/700' }}"
+                alt="{{ news.title }}"
                 loading="lazy"
             >
         </div>
@@ -22,20 +22,20 @@
         <div class="detail-content">
 
             <div class="detail-date">
-                {{ published }}
+                {{ news.pub_date }}
             </div>
 
             <h1>
-                {{ title }}
+                {{ news.title }}
             </h1>
 
             <div class="detail-description">
-                {{ description|safe }}
+                {{ news.summary|safe }}
             </div>
 
-            {% if link %}
+            {% if news.link %}
             <a
-                href="{{ link }}"
+                href="{{ news.link }}"
                 target="_blank"
                 class="source-btn"
             >
@@ -64,14 +64,14 @@
         <div class="related-card">
 
             <img
-                src="{{ item.image|default:'https://picsum.photos/600/400' }}"
+                src="{{ item.image_url|default:'https://picsum.photos/600/400' }}"
                 alt="{{ item.title }}"
             >
 
             <div class="related-content">
 
                 <span class="related-date">
-                    {{ item.published }}
+                    {{ item.pub_date }}
                 </span>
 
                 <h3>
@@ -79,11 +79,11 @@
                 </h3>
 
                 <p>
-                    {{ item.description|safe|truncatewords:18 }}
+                    {{ item.summary|safe|truncatewords:18 }}
                 </p>
 
                 <a
-                    href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.description|urlencode }}&published={{ item.published|urlencode }}&image={{ item.image|urlencode }}&link={{ item.link|urlencode }}"
+                    href="{% url 'news_detail' item.id %}"
                     class="read-more"
                 >
                     Batafsil
