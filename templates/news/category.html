@@ -22,10 +22,10 @@
 
         <div class="news-image">
 
-            {% if item.image %}
+            {% if item.image_url %}
 
             <img
-                src="{{ item.image }}"
+                src="{{ item.image_url }}"
                 alt="{{ item.title }}"
             >
 
@@ -43,7 +43,7 @@
         <div class="news-content">
 
             <div class="news-date">
-                {{ item.published }}
+                {{ item.pub_date }}
             </div>
 
             <h2>
@@ -51,11 +51,11 @@
             </h2>
 
             <p>
-                {{ item.description|safe|truncatewords:25 }}
+                {{ item.summary|safe|truncatewords:25 }}
             </p>
 
             <a
-                href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.description|urlencode }}&published={{ item.published|urlencode }}&image={{ item.image|urlencode }}&link={{ item.link|urlencode }}"
+                href="{% url 'news_detail' item.id %}"
                 class="read-more"
             >
 

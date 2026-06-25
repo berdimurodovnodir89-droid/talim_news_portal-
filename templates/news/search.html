@@ -16,16 +16,16 @@ Qidiruv
 
         <div class="news-card">
 
-            <img src="{{ item.image }}" alt="" width="100%">
+            <img src="{{ item.image_url }}" alt="" width="100%">
 
             <div class="news-content">
 
                 <h3>{{ item.title }}</h3>
 
-                <p>{{ item.description|safe|truncatewords:20 }}</p>
+                <p>{{ item.summary|safe|truncatewords:20 }}</p>
 
                 <a class="read-more"
-                   href="{% url 'news_detail' %}?title={{ item.title|urlencode }}&description={{ item.description|urlencode }}&published={{ item.published|urlencode }}&link={{ item.link|urlencode }}">
+                   href="{% url 'news_detail' item.id %}">
                     O‘qish
                 </a>
 
